@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+header {
+    background-color: #262626;
+    position: fixed; /* Hacer que el header quede fijo */
+    top: 0;
+    left: 0;
+    width: 100%; /* Asegurar que el header ocupe todo el ancho de la pantalla */
+    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Añadir sombra para un efecto de elevación */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+nav .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+nav .cart {
+    background-color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+main {
+    padding: 2rem;
+    margin-top: 80px; /* Agregar margen superior para que el contenido no quede detrás del header */
+}
+
+.menu {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.menu h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.meal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.meal-description {
+    max-width: 600px;
+}
+
+.meal-description h2 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.meal-description p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.meal-description button {
+    background-color: #52443d;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.meal-description button:hover {
+    background-color: #6b5d54;
+}
+
+.meal-image img {
+    border-radius: 10px;
+    width: 120px;
+    height: auto;
+}
