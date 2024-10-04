@@ -47,7 +47,7 @@
                             listItem.className = 'mesero-item';
                             listItem.innerHTML = `
                                 <span>Mesero: ${mesero.nombre}</span>
-                                <a class="mesero-button" href="mesero.php?id_mesero=${mesero.id}">Ver Mesas</a>
+                                <a class="mesero-button" href="mesero.php?id_mesero=${mesero.id_usuario}">Ver Mesas</a>
                             `;
                             list.appendChild(listItem);
                         });

@@ -1,0 +1,132 @@
+body {
+    background-color: #1c1c1c;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #2a2a2a; /* Different but similar color to the background */
+    margin-bottom: 20px; /* Added margin-bottom to separate navbar from content */
+}
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+.navbar .nav-links {
+    display: flex;
+    gap: 20px;
+}
+.navbar .nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+}
+.navbar .sign-in {
+    background-color: #e94b35;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.rating-overview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.rating-overview .rating {
+    font-size: 48px;
+    font-weight: bold;
+}
+.rating-overview .stars {
+    color: #f5c518;
+}
+.rating-overview .reviews-count {
+    font-size: 16px;
+    color: #999;
+}
+.rating-breakdown {
+    margin: 20px 0;
+}
+
+.review {
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.review img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.review-content {
+    flex: 1;
+}
+
+.stars {
+    color: #ffcc00;
+}
+.rating-breakdown .bar {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+.rating-breakdown .bar span {
+    width: 20px;
+    text-align: right;
+    margin-right: 10px;
+}
+.rating-breakdown .bar .progress {
+    flex: 1;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.rating-breakdown .bar .progress .fill {
+    height: 100%;
+    background-color: #f5c518;
+}
+.footer {
+    text-align: center;
+    padding: 40px;
+    background-color: #1c1c1c;
+}
+.footer .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+}
+.footer .footer-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+}
+.footer .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.footer .social-icons a {
+    color: #ffffff;
+    font-size: 20px;
+}
+.footer p {
+    font-size: 14px;
+    color: #888888;
+}

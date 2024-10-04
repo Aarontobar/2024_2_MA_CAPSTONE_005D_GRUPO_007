@@ -21,7 +21,7 @@ if (isset($_POST['id_pedido'])) {
     $current_status = $row['estado'];
     
     // Definir el siguiente estado
-    $statuses = ['En Cocina', 'En Preparación', 'Listo', 'Servido', 'Pagado'];
+    $statuses = ['recibido', 'en preparación', 'preparado', 'servido'];
     $next_status = $statuses[array_search($current_status, $statuses) + 1] ?? null;
 
     if ($next_status) {

@@ -31,7 +31,7 @@ $total_amount = 0;
 
 foreach ($cart_items as $item) {
     $product_id = $item['id'];
-    $product_price = isset($item['price']) ? $item['price'] : 0; // Asegúrate de que el precio esté disponible
+    $product_price = isset($item['price']) ? $item['price'] : 0;
 
     if (isset($cart_count[$product_id])) {
         $cart_count[$product_id]['quantity']++;
@@ -49,7 +49,6 @@ $cart_ids = array_keys($cart_count);
 
 // Solo realizar la consulta si hay productos en el carrito
 if (!empty($cart_ids)) {
-    // Traer la información completa de los productos desde la base de datos
     $placeholders = implode(',', array_fill(0, count($cart_ids), '?'));
     $sql = "SELECT id_platillo, nombre_platillo, precio FROM Platillos WHERE id_platillo IN ($placeholders)";
     $stmt = $conn->prepare($sql);
@@ -58,7 +57,6 @@ if (!empty($cart_ids)) {
         die("Error en la preparación de la consulta: " . $conn->error);
     }
 
-    // Ligamos los parámetros
     $types = str_repeat('i', count($cart_ids));
     $stmt->bind_param($types, ...$cart_ids);
     $stmt->execute();
@@ -83,77 +81,35 @@ foreach ($cart_count as $product_id => $item) {
 
 $tipo_pedido = ($mesa_id === 0) ? 'Para Llevar' : 'Para Servir';
 
-// Si no se recibió un id_mesero, seleccionar uno al azar
-if (($id_mesero === null || $id_mesero === 0) && $mesa_id !== 0) {
-    $sql = "SELECT id_usuario 
-    FROM usuarios 
-    WHERE disponible = 1 
-    AND tipo_usuario = 'mesero'
-    AND (SELECT COUNT(*) 
-         FROM Pedido 
-         WHERE id_usuario = usuarios.id_usuario 
-         AND estado IN ('En Cocina', 'En Preparación')) < 3 
-    ORDER BY RAND() 
-    LIMIT 1";
-    $result = $conn->query($sql);
+// Buscar el id_detalle_mesero_mesa
+$id_detalle_mesero_mesa = null;
+if ($mesa_id > 0 || ($id_mesero !== null && $id_mesero > 0)) {
+    $sql = "SELECT id_detalle_mesero_mesa FROM detalle_mesero_mesa 
+            WHERE (id_usuario = ? OR id_mesa = ?) AND estado = 'activo' LIMIT 1";
 
-    if ($result && $result->num_rows > 0) {
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ii', $id_mesero, $mesa_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $id_mesero = $row['id_usuario'];
-    } else {
-        // Si no hay meseros disponibles, seleccionar uno cualquiera
-        $sql = "SELECT id_usuario 
-        FROM usuarios 
-        WHERE tipo_usuario = 'mesero' 
-        ORDER BY RAND() 
-        LIMIT 1";
-        $result = $conn->query($sql);
-        if ($result && $result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $id_mesero = $row['id_usuario'];
-        } else {
-            $id_mesero = null; // No hay meseros disponibles
-        }
+        $id_detalle_mesero_mesa = $row['id_detalle_mesero_mesa'];
     }
+    $stmt->close();
 }
 
 // Crear consulta SQL para insertar el pedido
-$sql = "INSERT INTO Pedido (total_cuenta, hora, fecha, estado, tipo"; 
-
-// Agregar campos opcionales a la consulta SQL
-$bind_params = [$total_amount, $tipo_pedido];
-
-if ($mesa_id !== null && $mesa_id > 0) {
-    $sql .= ", id_mesa";
-    $bind_params[] = $mesa_id;
-}
-if ($id_mesero !== null && $id_mesero > 0) { 
-    $sql .= ", id_usuario";
-    $bind_params[] = $id_mesero;
-}
-
-// Completar la cadena de columnas y valores
-$sql .= ") VALUES (?, NOW(), CURDATE(), 'En Preparación', ?";
-
-// Agregar signos de interrogación adicionales para los parámetros opcionales
-if ($mesa_id !== null && $mesa_id > 0) {
-    $sql .= ", ?";
-}
-if ($id_mesero !== null && $id_mesero > 0) {
-    $sql .= ", ?";
-}
-
-$sql .= ')'; // Cerrar la consulta
-
+$sql = "INSERT INTO Pedido (id_detalle_mesero_mesa, total_cuenta, hora, fecha, estado, tipo) VALUES (?, ?, NOW(), CURDATE(), 'Recibido', ?)";
 $stmt = $conn->prepare($sql);
 
-if ($stmt === false) {
-    die("Error en la preparación de la consulta: " . $conn->error);
+// Si no hay detalle mesero mesa, se deja NULL
+if ($id_detalle_mesero_mesa === null) {
+    $id_detalle_mesero_mesa = null;
 }
 
-// Ligamos los parámetros y ejecutamos la consulta
-$types = 'ds' . str_repeat('i', count($bind_params) - 2); // Ajusta los tipos según los parámetros
-$stmt->bind_param($types, ...$bind_params);
+// Agregar el tipo de pedido
+$stmt->bind_param('ids', $id_detalle_mesero_mesa, $total_amount, $tipo_pedido);
 $stmt->execute();
 
 if ($stmt->affected_rows === 0) {
@@ -162,6 +118,7 @@ if ($stmt->affected_rows === 0) {
 
 $id_pedido = $stmt->insert_id; // Obtener el ID del pedido insertado
 $stmt->close();
+
 // Insertar los detalles del pedido
 foreach ($cart_count as $product_id => $item) {
     if (isset($products[$product_id])) {

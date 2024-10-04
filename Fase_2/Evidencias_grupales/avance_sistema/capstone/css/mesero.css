@@ -14,6 +14,7 @@ body {
     background-color: #f7f3ee;
     padding-top: 40px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Animación para ocultar la barra lateral en móvil */
 }
 
 .sidebar a {
@@ -32,6 +33,56 @@ body {
 .content {
     margin-left: 240px;
     padding: 40px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+        transform: translateX(-100%); /* Ocultar la barra lateral por defecto */
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Mostrar la barra lateral cuando está activa */
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .table-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+}
+
+/* Botón para mostrar la barra lateral en móviles */
+#menu-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    font-size: 24px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    #menu-toggle {
+        display: block; /* Mostrar el botón de menú en pantallas pequeñas */
+    }
 }
 
 h1 {
@@ -46,20 +97,15 @@ h1 {
 
 /* Table item */
 .table-item {
-    padding: 20px;
-    background-color: #f3f1ed;
-    margin-bottom: 20px; /* Separación entre las mesas */
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid transparent; /* Borde predeterminado */
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: white; /* Fondo blanco para las mesas */
+    border-radius: 8px; /* Bordes redondeados */
+    position: relative; /* Para permitir el uso de z-index */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.table-item:hover {
-    background-color: #e8e5df;
-}
 
 /* Detalles ocultos inicialmente */
 .table-item .details {
@@ -68,39 +114,122 @@ h1 {
     color: #555;
     border-top: 1px solid #e2ddd7;
     margin-top: 10px;
+    z-index: 1; /* Aseguramos que los detalles estén por encima del borde */
 }
 
 .table-item.active .details {
-    display: block;
+    display: block; /* Mostrar detalles cuando la mesa está activa */
 }
 
-/* Estilo para diferentes estados */
-.occupied {
-    border-left: 4px solid #ff7b54; /* Borde naranja para ocupado */
+/* Mesa disponible */
+.mesa-disponible {
+    border-left: 5px solid #4CAF50; /* Verde suave */
+    background-color: #eafae6; /* Verde claro */
 }
 
-.free {
-    border-left: 4px solid #4caf50; /* Borde verde para libre */
+/* Mesa ocupada */
+.mesa-ocupada {
+    border-left: 5px solid #FF7043; /* Naranja suave en lugar de rojo */
+    background-color: #ffe9e6; /* Naranja claro */
 }
 
-.served {
-    border-left: 4px solid #1e90ff; /* Borde azul para servido */
+/* Mesa reservada */
+.mesa-reservada {
+    border-left: 5px solid #42A5F5; /* Azul suave */
+    background-color: #e6f3ff; /* Azul claro */
 }
 
-/* Agregamos un efecto de brillo según el estado */
-.occupied:hover {
-    box-shadow: 0 0 10px rgba(255, 123, 84, 0.7); /* Brillo para ocupado */
+/* Mesa en espera */
+.mesa-en-espera {
+    border-left: 5px solid #FFB74D; /* Naranja claro */
+    background-color: #fff7e6; /* Fondo claro para espera */
 }
 
-.free:hover {
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.7); /* Brillo para libre */
-}
-
-.served:hover {
-    box-shadow: 0 0 10px rgba(30, 144, 255, 0.7); /* Brillo para servido */
+/* Mesa para limpiar */
+.mesa-para-limpiar {
+    border-left: 5px solid #B0BEC5; /* Gris suave */
+    background-color: #f7f7f7; /* Gris claro */
 }
 
 /* Texto del estado */
 .table-status {
-    color: #555;
+    color: #666; /* Un gris más suave */
+}
+
+/* Efecto hover para suavizar el gris */
+.table-item:hover {
+    background-color: #f0f4f8; /* Gris suave al pasar el mouse */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Botón estilizado */
+.action-button {
+    background-color: #007bff; /* Color azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover: Cambia el color y añade una ligera sombra */
+.action-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón deshabilitado */
+.action-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.notification-container {
+    position: fixed;
+    top: 20px; /* Distancia desde la parte superior */
+    right: 20px; /* Distancia desde la derecha */
+    z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
+}
+
+.notification-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px; /* Tamaño del ícono */
+}
+
+.notification-dropdown {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    right: 0; /* Alineación a la derecha */
+    width: 250px; /* Ajusta el ancho según sea necesario */
+    max-height: 400px; /* Limita la altura */
+    overflow-y: auto; /* Habilita el desplazamiento si hay muchas notificaciones */
+    z-index: 1000;
+}
+
+.notification-dropdown h4 {
+    margin: 10px;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
 }

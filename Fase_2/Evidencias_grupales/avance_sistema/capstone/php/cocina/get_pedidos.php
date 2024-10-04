@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener pedidos activos del día actual
-$sql = "SELECT * FROM Pedido WHERE estado IN ('En Cocina', 'En Preparación') AND fecha = CURDATE()";
+$sql = "SELECT * FROM Pedido WHERE estado IN ('recibido', 'en preparación') AND fecha = CURDATE()";
 $result = $conn->query($sql);
 
 $pedidos = [];

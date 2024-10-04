@@ -4,27 +4,27 @@
         <h4 class="text-white">Administración</h4>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="administrador.php">
+                <a class="nav-link" href="../../administrador.php">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Cruds/Usuarios/admin_usuarios.php">
+                <a class="nav-link" href="../Usuarios/admin_usuarios.php">
                     <i class="fas fa-users"></i> Usuarios
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Cruds/Platillos/admin_platillos.php">
+                <a class="nav-link" href="../Platillos/admin_platillos.php">
                     <i class="fas fa-utensils"></i> Platillos
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Cruds/Mesas/admin_mesas.php">
+                <a class="nav-link" href="../Mesas/admin_mesas.php">
                     <i class="fas fa-chair"></i> Mesas
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="reportes.php">
+                <a class="nav-link" href="../../reportes.php">
                     <i class="fas fa-chart-line"></i> Reportes
                 </a>
             </li>

@@ -1,110 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reseñas - Restaurante</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: #1f1f1f;
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        nav {
-            display: flex;
-            gap: 20px;
-        }
-
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #ffcc00;
-        }
-
-        .container {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .review {
-            background-color: #1f1f1f;
-            padding: 20px;
-            border-radius: 8px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .review img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-        }
-
-        .review-content {
-            flex: 1;
-        }
-
-        .stars {
-            color: #ffcc00;
-        }
-
-        footer {
-            background-color: #1f1f1f;
-            padding: 20px;
-            text-align: center;
-        }
-
-        footer .social-icons a {
-            color: #ffffff;
-            margin: 0 10px;
-            font-size: 1.5em;
-            transition: color 0.3s;
-        }
-
-        footer .social-icons a:hover {
-            color: #ffcc00;
-        }
-    </style>
+    <title>Restaurante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="../../css/reseñas.css">
 </head>
 <body>
-
-<header>
-    <h1><a href="../../index.php" style="color: #ffffff; text-decoration: none;">Restaurante</a></h1>
-    <nav>
-        <a href="nosotros.php">Nosotros</a>
-        <a href="#reseñas">Reseñas</a>
-        <a href="../menu/ver_menu.php">Pedir</a>
-        <a href="../login/login.php">Trabajadores</a>
-    </nav>
-</header>
-
-<div class="container">
-    <h2>Reseñas de Nuestros Clientes</h2>
-
-    <!-- Reseñas -->
-    <div class="review">
+    <div class="navbar">
+    <div class="logo">
+        味の道 (Aji no Michi)
+    </div>
+    <div class="nav-links">
+        <a href="../../index.php">
+        Home
+        </a>
+        <a href="nosotros.php">
+        Nosotros
+        </a>
+        <a href="reseñas.php">
+        Reseñas
+        </a>
+        <a href="../menu/ver_menu.php">
+        Pedir
+        </a>
+    </div>
+    <a class="sign-in" href="../login/login.php">
+        Trabajadores
+    </a>
+    </div>
+    <div class="container">
+        <div class="rating-breakdown">
+            <div class="bar">
+                <span>5</span>
+                <div class="progress">
+                    <div class="fill" style="width: 65%;"></div>
+                </div>
+                <span>65%</span>
+            </div>
+            <div class="bar">
+                <span>4</span>
+                <div class="progress">
+                    <div class="fill" style="width: 20%;"></div>
+                </div>
+                <span>20%</span>
+            </div>
+            <div class="bar">
+                <span>3</span>
+                <div class="progress">
+                    <div class="fill" style="width: 5%;"></div>
+                </div>
+                <span>5%</span>
+            </div>
+            <div class="bar">
+                <span>2</span>
+                <div class="progress">
+                    <div class="fill" style="width: 5%;"></div>
+                </div>
+                <span>5%</span>
+            </div>
+            <div class="bar">
+                <span>1</span>
+                <div class="progress">
+                    <div class="fill" style="width: 5%;"></div>
+                </div>
+                <span>5%</span>
+            </div>
+        </div>
+        <div class="review">
         <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Cliente 1">
         <div class="review-content">
             <h3>Juan Pérez</h3>
@@ -213,17 +175,38 @@
             </div>
         </div>
     </div>
-</div>
+        <div class="footer">
+        <div class="footer-links">
+            <a href="#">
+            Nosotros
+            </a>
+            <a href="#">
+            NUestro menu
+            </a>
 
-<!-- Footer -->
-<footer>
-    <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-yelp"></i></a>
+        </div>
+        <div class="social-icons">
+            <a href="#">
+            <i class="fab fa-instagram">
+            </i>
+            </a>
+            <a href="#">
+            <i class="fab fa-twitter">
+            </i>
+            </a>
+            <a href="#">
+            <i class="fab fa-facebook">
+            </i>
+            </a>
+            <a href="#">
+            <i class="fab fa-tiktok">
+            </i>
+            </a>
+        </div>
+        <p>
+            © 2024 Restaurante. All rights reserved.
+        </p>
+        </div>
     </div>
-</footer>
-
 </body>
 </html>

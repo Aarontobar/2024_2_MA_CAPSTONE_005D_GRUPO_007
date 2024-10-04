@@ -25,7 +25,7 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             <div class="progress-bar">
                 <div></div>
             </div>
-            <div class="progress-text">75%</div>
+            <div class="progress-text">0%</div>
         </div>
         
         <!-- Order status -->
@@ -33,7 +33,7 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
             <ul>
                 <li>
                     <img src="../../imagenes/bill.png" alt="Order Sent Icon">
-                    <p>Pedido resivido</p>
+                    <p>Pedido recibido</p>
                     <span class="time">2022-01-01 12:00:00</span>
                 </li>
                 <li>
@@ -43,12 +43,12 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
                 </li>
                 <li>
                     <img src="../../imagenes/serving.png" alt="Delivery In Progress Icon">
-                    <p>Tu pedido se dirije a tu mesa</p>
+                    <p>Tu pedido está preparado</p>
                     <span class="time">2022-01-01 13:00:00</span>
                 </li>
                 <li>
                     <img src="../../imagenes/recivido.png" alt="Delivered Icon">
-                    <p>Ya resiviste tu pedido</p>
+                    <p>Ya recibiste tu pedido</p>
                     <span class="time">2022-01-01 13:30:00</span>
                 </li>
             </ul>
@@ -56,7 +56,7 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
     </div>
 
     <script>
-// Función para obtener el parámetro 'id' de la URL
+        // Función para obtener el parámetro 'id' de la URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -66,8 +66,7 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         // Función para obtener un gif aleatorio de una carpeta específica
         function getRandomGifPath(folder) {
-            // Supón que hay un número conocido de gifs en cada carpeta
-            const gifCount = 5; // Por ejemplo, si tienes 5 gifs en cada carpeta
+            const gifCount = 5; // Supón que hay un número conocido de gifs en cada carpeta
             const randomIndex = Math.floor(Math.random() * gifCount) + 1;
             return `../../gifs/${folder}/gif${randomIndex}.gif`;
         }
@@ -97,25 +96,25 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
                         });
 
                         switch (data.estado) {
-                            case 'En Preparación':
-                                imageUrl = getRandomGifPath('en_preparacion');
+                            case 'recibido':
+                                imageUrl = getRandomGifPath('recibido');
                                 progressPercentage = 25;
+                                currentStatusIndex = 0;
+                                break;
+                            case 'en preparación':
+                                imageUrl = getRandomGifPath('en_preparacion');
+                                progressPercentage = 50;
                                 currentStatusIndex = 1;
                                 break;
-                            case 'En Cocina':
-                                imageUrl = getRandomGifPath('en_cocina');
-                                progressPercentage = 50;
+                            case 'preparado':
+                                imageUrl = getRandomGifPath('preparado');
+                                progressPercentage = 75;
                                 currentStatusIndex = 2;
                                 break;
-                            case 'Listo':
-                                imageUrl = getRandomGifPath('listo');
-                                progressPercentage = 75;
-                                currentStatusIndex = 3;
-                                break;
-                            case 'Servido':
+                            case 'servido':
                                 imageUrl = getRandomGifPath('servido');
                                 progressPercentage = 100;
-                                currentStatusIndex = 4;
+                                currentStatusIndex = 3;
                                 break;
                         }
 

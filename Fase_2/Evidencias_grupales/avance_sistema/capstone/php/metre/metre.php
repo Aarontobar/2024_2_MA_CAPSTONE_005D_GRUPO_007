@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 date_default_timezone_set('America/Santiago');
 
 // Verificar el estado del día
-$fecha = date('Y-m-d'); // Obtener la fecha actual en la zona horaria correcta
+$fecha = date('Y-m-d');
 $result = $conn->query("SELECT * FROM Estado_Dia WHERE fecha = '$fecha'");
 $estadoDia = $result->fetch_assoc();
 
@@ -27,8 +27,19 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
     exit();
 }
 
-// Aquí puedes agregar el contenido del dashboard del metre
+// Consultar Pedidos (mostramos solo los primeros 5)
+$pedidos = $conn->query("SELECT id_pedido, estado FROM Pedido WHERE fecha = '$fecha' LIMIT 5");
+
+// Consultar Platillos (mostramos solo los primeros 5)
+$platillos = $conn->query("SELECT nombre_platillo, estado FROM Platillos LIMIT 5");
+
+// Consultar Reservas (mostramos solo las primeras 5)
+$reservas = $conn->query("SELECT nombre_reserva, apellido_reserva, fecha, id_mesa FROM Reserva WHERE fecha >= '$fecha' LIMIT 5");
+
+// Consultar Mesas (mostramos solo las primeras 5)
+$mesas = $conn->query("SELECT id_mesa, estado FROM Mesa LIMIT 5");
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,18 +61,6 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
             padding: 20px;
             margin-bottom: 20px;
         }
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-        }
-        .notification-bell .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            font-size: 0.75rem;
-        }
     </style>
 </head>
 <body>
@@ -80,14 +79,19 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
                 <li class="nav-item">
                     <a class="nav-link" href="#">Mesas</a>
                 </li>
-                <li class="nav-item notification-bell" data-bs-toggle="tooltip" title="Notificaciones">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-bell"></i>
-                        <span class="badge">3</span> <!-- Cambiar según las notificaciones -->
-                    </a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Reservaciones</a>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-danger" id="terminarDiaBtn">Terminar Día</button>
+                    <a class="nav-link" href="#">Platillos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 15a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1h1V1a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-1h-1v1z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L14.293 8H5.5a.5.5 0 0 0 0 1h8.793l-2.647 2.646a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg> Logout
+                    </a>
                 </li>
             </ul>
         </div>
@@ -98,6 +102,7 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
     <h1 class="mb-4">Dashboard del Metre</h1>
 
     <div class="row">
+        <!-- Lista de Pedidos -->
         <div class="col-md-4">
             <div class="dashboard-module">
                 <h5>Lista de Pedidos</h5>
@@ -110,22 +115,20 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while($pedido = $pedidos->fetch_assoc()): ?>
                         <tr>
-                            <td>1</td>
-                            <td>En Preparación</td>
+                            <td><?= $pedido['id_pedido'] ?></td>
+                            <td><?= $pedido['estado'] ?></td>
                             <td><button class="btn btn-link">Ver</button></td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Listo</td>
-                            <td><button class="btn btn-link">Ver</button></td>
-                        </tr>
-                        <!-- Más filas según los pedidos -->
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
+                <a href="ver_mas.php?tipo=pedidos" class="btn btn-primary">Ver más</a>
             </div>
         </div>
 
+        <!-- Platillos -->
         <div class="col-md-4">
             <div class="dashboard-module">
                 <h5>Platillos</h5>
@@ -137,30 +140,24 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while($platillo = $platillos->fetch_assoc()): ?>
                         <tr>
-                            <td>Pizza</td>
+                            <td><?= $platillo['nombre_platillo'] ?></td>
                             <td>
                                 <select class="form-select">
-                                    <option>Disponible</option>
-                                    <option>No Disponible</option>
+                                    <option <?= $platillo['estado'] == 'Disponible' ? 'selected' : '' ?>>Disponible</option>
+                                    <option <?= $platillo['estado'] == 'No Disponible' ? 'selected' : '' ?>>No Disponible</option>
                                 </select>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Ensalada</td>
-                            <td>
-                                <select class="form-select">
-                                    <option>Disponible</option>
-                                    <option>No Disponible</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <!-- Más filas según los platillos -->
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
+                <a href="ver_mas.php?tipo=platillos" class="btn btn-primary">Ver más</a>
             </div>
         </div>
 
+        <!-- Reservas -->
         <div class="col-md-4">
             <div class="dashboard-module">
                 <h5>Reservas</h5>
@@ -173,23 +170,21 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while($reserva = $reservas->fetch_assoc()): ?>
                         <tr>
-                            <td>Juan Pérez</td>
-                            <td>2024-09-23</td>
-                            <td>3</td>
+                            <td><?= $reserva['nombre_reserva'] . ' ' . $reserva['apellido_reserva'] ?></td>
+                            <td><?= $reserva['fecha'] ?></td>
+                            <td><?= $reserva['id_mesa'] ?></td>
                         </tr>
-                        <tr>
-                            <td>Ana Gómez</td>
-                            <td>2024-09-24</td>
-                            <td>2</td>
-                        </tr>
-                        <!-- Más filas según las reservas -->
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
+                <a href="ver_mas.php?tipo=reservas" class="btn btn-primary">Ver más</a>
             </div>
         </div>
     </div>
 
+    <!-- Estado de Mesas -->
     <div class="dashboard-module">
         <h5>Estado de Mesas</h5>
         <table class="table">
@@ -200,30 +195,18 @@ if (!$estadoDia || $estadoDia['estado'] != 'Iniciado') {
                 </tr>
             </thead>
             <tbody>
+                <?php while($mesa = $mesas->fetch_assoc()): ?>
                 <tr>
-                    <td>1</td>
-                    <td>Disponible</td>
+                    <td><?= $mesa['id_mesa'] ?></td>
+                    <td><?= $mesa['estado'] ?></td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Ocupada</td>
-                </tr>
-                <!-- Más filas según las mesas -->
+                <?php endwhile; ?>
             </tbody>
         </table>
+        <a href="ver_mas.php?tipo=mesas" class="btn btn-primary">Ver más</a>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script>
-    document.getElementById('terminarDiaBtn').addEventListener('click', () => {
-        // Aquí puedes agregar la lógica para terminar el día
-        if (confirm("¿Estás seguro de que quieres terminar el día?")) {
-            // Redirigir o ejecutar lógica para terminar el día
-            alert("Día terminado."); // Esto es solo un ejemplo
-        }
-    });
-</script>
 </body>
 </html>
