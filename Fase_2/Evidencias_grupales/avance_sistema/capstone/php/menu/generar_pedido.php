@@ -84,7 +84,7 @@ $tipo_pedido = ($mesa_id === 0) ? 'Para Llevar' : 'Para Servir';
 // Buscar el id_detalle_mesero_mesa
 $id_detalle_mesero_mesa = null;
 if ($mesa_id > 0 || ($id_mesero !== null && $id_mesero > 0)) {
-    $sql = "SELECT id_detalle_mesero_mesa FROM detalle_mesero_mesa 
+    $sql = "SELECT id_detalle FROM detalle_mesero_mesa 
             WHERE (id_usuario = ? OR id_mesa = ?) AND estado = 'activo' LIMIT 1";
 
     $stmt = $conn->prepare($sql);
@@ -94,7 +94,7 @@ if ($mesa_id > 0 || ($id_mesero !== null && $id_mesero > 0)) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $id_detalle_mesero_mesa = $row['id_detalle_mesero_mesa'];
+        $id_detalle_mesero_mesa = $row['id_detalle'];
     }
     $stmt->close();
 }

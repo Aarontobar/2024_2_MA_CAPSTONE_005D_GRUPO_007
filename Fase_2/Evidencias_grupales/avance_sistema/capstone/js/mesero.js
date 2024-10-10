@@ -7,8 +7,18 @@ document.querySelectorAll('.table-item').forEach(item => {
 let shownNotifications = new Set(); // Almacena las notificaciones ya mostradas
 
 function obtenerDatos() {
-    const id_usuario = 4; // El ID del usuario
-    fetch(`get_mesas.php?id_mesero=${id_usuario}`)
+    // Obtener el parámetro id_usuario de la URL
+    const params = new URLSearchParams(window.location.search);
+    const id_usuario = params.get('id_usuario'); // id_usuario viene del enlace
+
+    if (!id_usuario) {
+        console.error('ID de mesero no encontrado en la URL');
+        return;
+    }
+
+    // Aquí puedes continuar con la lógica de la función
+    console.log('ID de mesero:', id_usuario);
+    fetch(`get_mesas.php?id_usuario=${id_usuario}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -23,6 +33,10 @@ function obtenerDatos() {
             data.mesas.forEach(mesa => {
                 const estado_mesa = mesa.estado;
                 const pedido_activo = data.pedidos[mesa.id_mesa];
+
+
+                console.log('Estado de la mesa:', estado_mesa);
+                console.log('Pedido activo para la mesa:', pedido_activo);
 
                 const listItem = document.createElement('li');
                 listItem.classList.add('table-item', estado_mesa.toLowerCase().replace(' ', '-')); // Agregar clase según el estado
@@ -91,14 +105,24 @@ function obtenerDatos() {
 
                 if (estado_mesa === 'Ocupada' && !pedido_activo) {
                     detailsDiv.innerHTML = `<p>La mesa está ocupada. Debe tomar el pedido.</p>
-                                            <a href="../menu/ver_menu.php?id_mesa=${mesa.id_mesa}&id_mesero=${id_usuario}" class="action-button">Tomar Pedido</a>`;
+                                            <a href="../menu/ver_menu.php?mesa_id=${mesa.id_mesa}&id_usuario=${id_usuario}" class="action-button">Tomar Pedido</a>`;
                 } else if (estado_mesa === 'Para Limpiar') {
                     detailsDiv.innerHTML = `<p>La mesa necesita ser limpiada.</p>
                                             <button class="action-button">Marcar como limpia</button>`;
                 } else if (pedido_activo) {
+                    // Dentro del bloque donde creas los botones dinámicamente
                     if (pedido_activo.estado === 'preparado') {
                         detailsDiv.innerHTML = `<p>El pedido está listo para ser llevado a la mesa.</p>
-                                                <button class="action-button">Llevar Pedido</button>`;
+                                                <button class="action-button" data-pedido-id="${pedido_activo.id_pedido}">Pedido llevado</button>`;
+
+                        // Asegúrate de asignar el evento justo después de agregar el botón
+                        const actionButton = detailsDiv.querySelector('.action-button');
+                        actionButton.addEventListener('click', function() {
+                            const pedidoId = this.getAttribute('data-pedido-id');
+                            if (pedidoId) {
+                                marcarPedidoComoLlevado(pedidoId); // Llama a la función para actualizar el estado
+                            }
+                        });
                     } else {
                         detailsDiv.innerHTML = `<p><strong>Pedido ID:</strong> ${pedido_activo.id_pedido}</p>
                                                 <p><strong>Total:</strong> $${pedido_activo.total_cuenta}</p>
@@ -214,3 +238,33 @@ sendMessageButton.addEventListener('click', () => {
         messageInput.value = ''; // Limpiar el input
     }
 });
+
+// Asegúrate de agregar este código después de que el contenido de `detailsDiv` se actualice.
+document.querySelectorAll('.action-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const pedidoId = this.getAttribute('data-pedido-id');
+        
+        // Verifica que el botón tiene un ID de pedido válido
+        if (pedidoId) {
+            marcarPedidoComoLlevado(pedidoId); // Llama a la función que cambiará el estado del pedido
+        }
+    });
+});
+
+function marcarPedidoComoLlevado(pedidoId) {
+    // Realiza una petición AJAX al servidor
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '../mesero/estado_pedido.php', true); // Archivo PHP que manejará el cambio de estado
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            alert('El pedido ha sido marcado como servido.'); // Mensaje de éxito
+            location.reload(); // Recargar la página para reflejar los cambios
+        } else {
+            alert('Error al actualizar el pedido: ' + xhr.responseText);
+        }
+    };
+
+    // Enviar el ID del pedido y el nuevo estado al servidor
+    xhr.send('id_pedido=' + pedidoId + '&nuevo_estado=servido');
+}

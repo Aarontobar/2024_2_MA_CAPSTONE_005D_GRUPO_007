@@ -205,6 +205,8 @@ $mesas = $conn->query("SELECT id_mesa, estado FROM Mesa LIMIT 5");
         </table>
         <a href="ver_mas.php?tipo=mesas" class="btn btn-primary">Ver más</a>
     </div>
+
+    <?php include '../modulos/Chat.php'; ?>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>

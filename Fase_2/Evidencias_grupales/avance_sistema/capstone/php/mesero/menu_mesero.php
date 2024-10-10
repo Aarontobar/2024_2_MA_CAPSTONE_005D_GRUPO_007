@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener el id del mesero desde el enlace
-$id_usuario = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : 0;
+$id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
 
 // Consultar las mesas asignadas al mesero desde la tabla Pedido
 $sql = "SELECT M.id_mesa, M.estado, P.id_pedido, P.total_cuenta, P.hora, P.fecha
@@ -126,8 +126,8 @@ $conn->close();
 <body>
 
     <div class="sidebar">
-        <a href="mesero.php?id_mesero=<?= urlencode($id_usuario); ?>">Mesas asignadas</a>
-        <a href="menu_por_mesa.php?id_mesero=<?= urlencode($id_usuario); ?>">Menú por mesa</a>
+        <a href="mesero.php?id_usuario=<?= urlencode($id_usuario); ?>">Mesas asignadas</a>
+        <a href="menu_por_mesa.php?id_usuario=<?= urlencode($id_usuario); ?>">Menú por mesa</a>
     </div>
 
     <div class="content">
@@ -136,7 +136,7 @@ $conn->close();
             <?php if (!empty($mesas)): ?>
                 <?php foreach ($mesas as $mesa): ?>
                     <li class="table-item <?= strtolower($mesa['estado']) ?>">
-                        <a href="../menu/ver_menu.php?mesa_id=<?= urlencode($mesa['id_mesa']); ?>&id_mesero=<?= urlencode($id_usuario); ?>">
+                        <a href="../menu/ver_menu.php?mesa_id=<?= urlencode($mesa['id_mesa']); ?>&id_usuario=<?= urlencode($id_usuario); ?>">
                             <span>Mesa <?= $mesa['id_mesa'] ?></span>
                             <span class="table-status"><?= $mesa['estado'] ?></span>
                         </a>

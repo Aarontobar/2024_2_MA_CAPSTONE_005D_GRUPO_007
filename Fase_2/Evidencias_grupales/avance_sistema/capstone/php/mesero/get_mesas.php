@@ -12,10 +12,11 @@ if ($conn->connect_error) {
 }
 
 // Obtener el id del mesero desde el enlace
-$id_usuario = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : 0;
+$id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
 if ($id_usuario <= 0) {
     die(json_encode(["error" => "ID de usuario inválido"]));
 }
+
 
 // Consultar las mesas asignadas al mesero (detalle_mesero_mesa y mesas)
 $sql_mesas = "SELECT M.id_mesa, M.cantidad_asientos, M.estado 
@@ -45,7 +46,7 @@ if (!empty($mesas)) {
     $placeholders = implode(',', array_fill(0, count($mesa_ids), '?'));
 
     // Consulta para obtener los pedidos activos hoy para las mesas asignadas
-    $sql_pedidos_hoy = "SELECT P.id_pedido, P.id_detalle_mesero_mesa, P.total_cuenta, P.hora, P.fecha, DMM.id_mesa
+    $sql_pedidos_hoy = "SELECT P.id_pedido, P.id_detalle_mesero_mesa, P.total_cuenta, P.hora, P.fecha, p.estado, DMM.id_mesa
                         FROM Pedido P
                         JOIN detalle_mesero_mesa DMM ON P.id_detalle_mesero_mesa = DMM.id_detalle
                         WHERE DMM.id_mesa IN ($placeholders)

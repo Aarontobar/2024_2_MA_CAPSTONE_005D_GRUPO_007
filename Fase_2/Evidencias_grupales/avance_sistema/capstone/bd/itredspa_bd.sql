@@ -146,6 +146,18 @@ CREATE TABLE Estado_Dia (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Crear la tabla `mensajes`
+CREATE TABLE mensajes (
+    id_mensaje INT NOT NULL AUTO_INCREMENT,
+    id_usuario_envia INT NOT NULL,
+    id_usuario_recibe INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_mensaje),
+    FOREIGN KEY (id_usuario_envia) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_usuario_recibe) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
 COMMIT;
 
 -- Insertar usuarios (1 de cada tipo, y el resto meseros)

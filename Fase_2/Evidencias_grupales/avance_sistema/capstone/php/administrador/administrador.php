@@ -170,6 +170,8 @@ $pedidos_json = json_encode(array_reverse($pedidos));
             </div>
         </main>
     </div>
+
+    <?php include '../modulos/Chat.php'; ?>
 </div>
 
 <script>

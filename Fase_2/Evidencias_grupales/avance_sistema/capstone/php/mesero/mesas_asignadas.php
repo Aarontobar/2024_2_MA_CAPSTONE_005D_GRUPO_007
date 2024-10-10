@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener ID del mesero desde la solicitud
-$id_usuario = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : 0;
+$id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
 
 // Consultar mesas ocupadas por el mesero a través de los pedidos activos
 $sql = "SELECT DISTINCT mesa.id_mesa, mesa.cantidad_asientos, mesa.estado 

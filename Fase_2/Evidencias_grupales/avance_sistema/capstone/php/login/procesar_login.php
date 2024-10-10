@@ -44,17 +44,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Redireccionar según tipo de usuario
                 switch ($row['tipo_usuario']) {
                     case 'administrador':
-                        header("Location: ../administrador/administrador.php");
+                        header("Location: ../administrador/administrador.php?id_usuario=" . $row['id_usuario']);
                         break;
                     case 'mesero':
                         // Redirigir al mesero con el ID como parámetro
                         header("Location: ../mesero/mesero.php?id_usuario=" . $row['id_usuario']);
                         break;
                     case 'cocina':
-                        header("Location: ../cocina/cocina.php");
+                        header("Location: ../cocina/cocina.php?id_usuario=" . $row['id_usuario']);
                         break;
                     case 'metre':
-                        header("Location: ../metre/metre.php");
+                        header("Location: ../metre/metre.php?id_usuario=" . $row['id_usuario']);
                         break;
                     default:
                         header("Location: login.php?error=Tipo de usuario desconocido");

@@ -42,7 +42,7 @@ switch ($tipo) {
         break;
     case 'mesas':
         $titulo = "Estado de Mesas";
-        $query = "SELECT id_mesa, estado, cantidad_asientos FROM Mesa";
+        $query = "SELECT id_mesa, estado, cantidad_asientos FROM Mesa WHERE estado = 'Disponible'";
         if ($search) {
             $query .= " WHERE id_mesa = '$search' OR cantidad_asientos LIKE '%$search%'";
         }
@@ -209,6 +209,7 @@ function assignTable(id) {
         console.log("Respuesta del servidor:", xhr.responseText); // Para depuración
         if (xhr.status === 200) {
             alert('Mesa asignada con éxito.'); // Mensaje de éxito
+            location.reload(); // Actualizar la página
         } else {
             alert('Error al asignar la mesa: ' + xhr.responseText);
         }

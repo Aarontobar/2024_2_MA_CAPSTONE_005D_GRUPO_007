@@ -30,6 +30,8 @@
         <!-- Las tarjetas de pedidos se llenarán aquí mediante JavaScript -->
     </div>
 
+    <?php include '../modulos/Chat.php'; ?>
+    
     <script src="../../js/cocina.js"></script>
 </body>
 </html>
