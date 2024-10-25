@@ -1,3 +1,43 @@
+<?php
+// Conexión a la base de datos
+$conexion = new mysqli('localhost', 'root', '', 'restaurante_bd');
+
+if ($conexion->connect_error) {
+    die('Error en la conexión: ' . $conexion->connect_error);
+}
+
+// Obtener las reseñas para el promedio
+$sqlPromedio = "SELECT calificacion FROM Reseñas";
+$resultPromedio = $conexion->query($sqlPromedio);
+
+$totalCalificaciones = 0;
+$numeroReseñas = 0;
+
+if ($resultPromedio->num_rows > 0) {
+    while ($row = $resultPromedio->fetch_assoc()) {
+        $totalCalificaciones += $row['calificacion'];
+        $numeroReseñas++;
+    }
+}
+
+// Calcular el promedio
+$promedioCalificacion = $numeroReseñas > 0 ? $totalCalificaciones / $numeroReseñas : 0;
+$promedioCalificacion = round($promedioCalificacion, 1); // Redondear a 1 decimal
+
+// Obtener las últimas 10 reseñas
+$sqlUltimasReseñas = "SELECT nombre_cliente, apellido_cliente, calificacion, comentario FROM Reseñas ORDER BY id_reseña DESC LIMIT 10";
+$resultUltimasReseñas = $conexion->query($sqlUltimasReseñas);
+
+$reseñas = [];
+
+if ($resultUltimasReseñas->num_rows > 0) {
+    while ($row = $resultUltimasReseñas->fetch_assoc()) {
+        $reseñas[] = $row;
+    }
+}
+
+$conexion->close();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,206 +47,57 @@
 </head>
 <body>
     <div class="navbar">
-    <div class="logo">
-        味の道 (Aji no Michi)
-    </div>
-    <div class="nav-links">
-        <a href="../../index.php">
-        Home
-        </a>
-        <a href="nosotros.php">
-        Nosotros
-        </a>
-        <a href="reseñas.php">
-        Reseñas
-        </a>
-        <a href="../menu/ver_menu.php">
-        Pedir
-        </a>
-    </div>
-    <a class="sign-in" href="../login/login.php">
-        Trabajadores
-    </a>
+        <div class="logo">
+            <img src="../../imagenes/logo.png" alt="Logo del Restaurante" />
+        </div>
+        <div class="nav-links">
+            <a href="../../index.php">Home</a>
+            <a href="nosotros.php">Nosotros</a>
+            <a href="reseñas.php">Reseñas</a>
+            <a href="../menu/ver_menu.php">Pedir</a>
+        </div>
+        <a class="sign-in" href="../login/login.php">Trabajadores</a>
     </div>
     <div class="container">
-        <div class="rating-breakdown">
-            <div class="bar">
-                <span>5</span>
-                <div class="progress">
-                    <div class="fill" style="width: 65%;"></div>
+        <h2>Promedio de Calificación: 
+            <?php 
+            // Mostrar estrellas del promedio
+            echo str_repeat('★', floor($promedioCalificacion)) . str_repeat('☆', 5 - floor($promedioCalificacion)); 
+            ?>
+        </h2>
+        <p>Calificación promedio: <?php echo $promedioCalificacion; ?></p>
+
+        <!-- Mostrar las últimas 10 reseñas -->
+        <?php foreach ($reseñas as $index => $reseña): ?>
+            <div class="review">
+                <img src="https://randomuser.me/api/portraits/men/<?php echo $index + 1; ?>.jpg" alt="Cliente">
+                <div class="review-content">
+                    <h3><?php echo $reseña['nombre_cliente'] . ' ' . $reseña['apellido_cliente']; ?></h3>
+                    <p>"<?php echo $reseña['comentario']; ?>"</p>
+                    <div class="stars">
+                        <?php 
+                        // Mostrar estrellas de la reseña
+                        echo str_repeat('★', floor($reseña['calificacion'])) . 
+                             str_repeat('☆', 5 - floor($reseña['calificacion'])); 
+                        ?>
+                    </div>
                 </div>
-                <span>65%</span>
             </div>
-            <div class="bar">
-                <span>4</span>
-                <div class="progress">
-                    <div class="fill" style="width: 20%;"></div>
-                </div>
-                <span>20%</span>
-            </div>
-            <div class="bar">
-                <span>3</span>
-                <div class="progress">
-                    <div class="fill" style="width: 5%;"></div>
-                </div>
-                <span>5%</span>
-            </div>
-            <div class="bar">
-                <span>2</span>
-                <div class="progress">
-                    <div class="fill" style="width: 5%;"></div>
-                </div>
-                <span>5%</span>
-            </div>
-            <div class="bar">
-                <span>1</span>
-                <div class="progress">
-                    <div class="fill" style="width: 5%;"></div>
-                </div>
-                <span>5%</span>
-            </div>
-        </div>
-        <div class="review">
-        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Cliente 1">
-        <div class="review-content">
-            <h3>Juan Pérez</h3>
-            <p>"La comida es deliciosa y el servicio es excepcional. Definitivamente volveré!"</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Cliente 2">
-        <div class="review-content">
-            <h3>María González</h3>
-            <p>"Un ambiente acogedor y platos sorprendentes. ¡Lo recomiendo al 100%!"</p>
-            <div class="stars">
-                ★★★★☆
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Cliente 3">
-        <div class="review-content">
-            <h3>Pedro Rodríguez</h3>
-            <p>"Me encantó la variedad del menú y la atención al cliente fue increíble."</p>
-            <div class="stars">
-                ★★★★☆
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Cliente 4">
-        <div class="review-content">
-            <h3>Ana López</h3>
-            <p>"Un lugar perfecto para disfrutar de una cena especial. ¡Simplemente increíble!"</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="Cliente 5">
-        <div class="review-content">
-            <h3>Carlos Martínez</h3>
-            <p>"Los precios son razonables para la calidad que ofrecen. ¡Muy recomendable!"</p>
-            <div class="stars">
-                ★★★★☆
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Cliente 6">
-        <div class="review-content">
-            <h3>Lucía Torres</h3>
-            <p>"Un servicio rápido y amable. Los platos estaban bien presentados y sabrosos."</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Cliente 7">
-        <div class="review-content">
-            <h3>Javier Hernández</h3>
-            <p>"El mejor restaurante en el que he estado. Cada visita es una experiencia única."</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/women/4.jpg" alt="Cliente 8">
-        <div class="review-content">
-            <h3>Clara Fernández</h3>
-            <p>"El ambiente es increíble y la comida nunca decepciona. ¡Volveré pronto!"</p>
-            <div class="stars">
-                ★★★★☆
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/men/5.jpg" alt="Cliente 9">
-        <div class="review-content">
-            <h3>Diego Ríos</h3>
-            <p>"Todo estaba delicioso y el personal fue muy atento. ¡Recomiendo el postre!"</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
-    </div>
-
-    <div class="review">
-        <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Cliente 10">
-        <div class="review-content">
-            <h3>Valentina Castro</h3>
-            <p>"Una experiencia maravillosa en un lugar encantador. No puedo esperar para volver."</p>
-            <div class="stars">
-                ★★★★★
-            </div>
-        </div>
-    </div>
-        <div class="footer">
+    
+    <div class="footer">
         <div class="footer-links">
-            <a href="#">
-            Nosotros
-            </a>
-            <a href="#">
-            NUestro menu
-            </a>
-
+            <a href="#">Nosotros</a>
+            <a href="#">Nuestro menú</a>
         </div>
         <div class="social-icons">
-            <a href="#">
-            <i class="fab fa-instagram">
-            </i>
-            </a>
-            <a href="#">
-            <i class="fab fa-twitter">
-            </i>
-            </a>
-            <a href="#">
-            <i class="fab fa-facebook">
-            </i>
-            </a>
-            <a href="#">
-            <i class="fab fa-tiktok">
-            </i>
-            </a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
         </div>
-        <p>
-            © 2024 Restaurante. All rights reserved.
-        </p>
-        </div>
+        <p>© 2024 Restaurante. All rights reserved.</p>
     </div>
 </body>
 </html>

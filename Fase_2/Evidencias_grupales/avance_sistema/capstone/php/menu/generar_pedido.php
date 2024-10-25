@@ -81,6 +81,9 @@ foreach ($cart_count as $product_id => $item) {
 
 $tipo_pedido = ($mesa_id === 0) ? 'Para Llevar' : 'Para Servir';
 
+// Asignar estado de pago
+$estado_pago = ($tipo_pedido === 'Para Llevar') ? 'pagado' : 'pendiente';
+
 // Buscar el id_detalle_mesero_mesa
 $id_detalle_mesero_mesa = null;
 if ($mesa_id > 0 || ($id_mesero !== null && $id_mesero > 0)) {
@@ -99,8 +102,10 @@ if ($mesa_id > 0 || ($id_mesero !== null && $id_mesero > 0)) {
     $stmt->close();
 }
 
-// Crear consulta SQL para insertar el pedido
-$sql = "INSERT INTO Pedido (id_detalle_mesero_mesa, total_cuenta, hora, fecha, estado, tipo) VALUES (?, ?, NOW(), CURDATE(), 'Recibido', ?)";
+// Crear consulta SQL para insertar el pedido con estado de pago
+$sql = "INSERT INTO Pedido (id_detalle_mesero_mesa, total_cuenta, hora, fecha, estado, tipo, estado_pago) 
+        VALUES (?, ?, NOW(), CURDATE(), 'recibido', ?, ?)";
+
 $stmt = $conn->prepare($sql);
 
 // Si no hay detalle mesero mesa, se deja NULL
@@ -108,8 +113,8 @@ if ($id_detalle_mesero_mesa === null) {
     $id_detalle_mesero_mesa = null;
 }
 
-// Agregar el tipo de pedido
-$stmt->bind_param('ids', $id_detalle_mesero_mesa, $total_amount, $tipo_pedido);
+// Agregar el tipo de pedido y estado de pago
+$stmt->bind_param('idss', $id_detalle_mesero_mesa, $total_amount, $tipo_pedido, $estado_pago);
 $stmt->execute();
 
 if ($stmt->affected_rows === 0) {

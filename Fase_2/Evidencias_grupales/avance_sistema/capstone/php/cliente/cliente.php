@@ -133,7 +133,7 @@ $conn->close();
             <?php if (count($mesas) > 0) : ?>
                 <?php foreach ($mesas as $mesa) : ?>
                     <li>
-                        <a href="../menu/ver_menu.php?mesa_id=<?php echo urlencode($mesa['id_mesa']); ?>">
+                        <a href="mesa_QR.php?mesa_id=<?php echo urlencode($mesa['id_mesa']); ?>">
                             Mesa <?php echo htmlspecialchars($mesa['id_mesa']); ?> - Asientos: <?php echo htmlspecialchars($mesa['cantidad_asientos']); ?> - Estado: <?php echo htmlspecialchars($mesa['estado']); ?>
                         </a>
                     </li>

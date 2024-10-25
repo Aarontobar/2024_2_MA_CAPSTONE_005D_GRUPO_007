@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener pedidos activos del día actual
-$sql = "SELECT * FROM Pedido WHERE estado IN ('recibido', 'en preparación') AND fecha = CURDATE()";
+$sql = "SELECT *, tipo FROM Pedido WHERE estado IN ('recibido', 'en preparación') AND fecha = CURDATE()";
 $result = $conn->query($sql);
 
 $pedidos = [];
@@ -26,6 +26,8 @@ if ($result->num_rows > 0) {
         $hora = $row['hora'];
         $fecha = $row['fecha'];
         $estado = $row['estado'];
+        $tipo = $row['tipo']; // Asegúrate de que el tipo esté en la consulta
+        $prioridad = $row['prioridad']; // Asegúrate de incluir la prioridad
 
         // Obtener platillos del pedido
         $sqlDetalles = "SELECT p.nombre_platillo, dp.cantidad 
@@ -46,7 +48,9 @@ if ($result->num_rows > 0) {
             'hora' => $hora,
             'fecha' => $fecha,
             'estado' => $estado,
-            'platillos' => $platillos
+            'platillos' => $platillos,
+            'tipo' => $tipo, // Asegúrate de incluir esto
+            'prioridad' => $prioridad // Incluir prioridad
         ];
     }
 }

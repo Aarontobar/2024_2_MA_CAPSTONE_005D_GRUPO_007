@@ -8,21 +8,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div class="sidebar">
-        <a href="#">Mesas asignadas</a>
-        <a href="menu_mesero.php?id_usuario=<?= $id_usuario ?>">Menú por mesa</a>
-    </div>
-
     <div class="notification-container">
-        <button id="notification-button" class="notification-button">
-            <i class="fa fa-bell"></i>
+        <!-- Botón de notificaciones con contador -->
+        <button id="notification-button" class="notification-bell">
+            <i class="fas fa-bell"></i> <span id="notification-counter">0</span>
         </button>
+
+        <!-- Menú desplegable de notificaciones -->
         <div id="notification-dropdown" class="notification-dropdown">
-            <h4>Notificaciones</h4>
-            <ul id="notification-list">
-                <!-- Las notificaciones se agregarán aquí dinámicamente -->
-            </ul>
+            <ul id="notification-list"></ul>
         </div>
+
+        <style>
+        .notification-bell {
+            position: relative;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .notification-bell .fa-bell {
+            transition: transform 0.3s ease;
+        }
+
+        .bell-animating .fa-bell {
+            animation: shake 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0); }
+        }
+
+        #notification-counter {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            width: 300px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .notification-dropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-dropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .notification-dropdown li:hover {
+            background-color: #f9f9f9;
+        }
+        </style>
     </div>
 
     <div class="content">

@@ -39,13 +39,11 @@ body {
     border-radius: 50%; /* Hace la imagen circular */
     object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del contenedor circular */
     display: block; /* Para asegurarse de que los márgenes automáticos funcionen */
-    margin: 20px auto;
 }
 
 /* Progress bar */
 .progress-container {
     width: 80%;
-    margin: 20px auto;
 }
 
 .progress-bar {
@@ -75,7 +73,6 @@ body {
 /* Order status */
 .order-status {
     width: 80%;
-    margin: 20px auto;
     text-align: left;
 }
 

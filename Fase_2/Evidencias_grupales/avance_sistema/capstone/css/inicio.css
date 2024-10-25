@@ -12,9 +12,10 @@ body {
     background-color: #2a2a2a; /* Different but similar color to the background */
     margin-bottom: 20px; /* Added margin-bottom to separate navbar from content */
 }
-.navbar .logo {
-    font-size: 24px;
-    font-weight: bold;
+
+.logo img {
+    width: 70px;
+    height: auto;
 }
 .navbar .nav-links {
     display: flex;

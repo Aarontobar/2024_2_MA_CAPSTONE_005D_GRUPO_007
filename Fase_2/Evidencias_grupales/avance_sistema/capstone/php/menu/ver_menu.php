@@ -183,7 +183,7 @@ $cart_count = isset($_SESSION['carrito']) ? count($_SESSION['carrito']) : 0;
 <body>
     <header>
         <nav>
-            <div class="logo">Cucina Italiana</div>
+            <div class="logo">Tomoshibi</div>
             <ul>
                 <li><a href="?tipo_platillo=Entrada&mesa_id=<?php echo urlencode($id_mesa); ?><?php echo $id_mesero > 0 ? '&id_mesero=' . urlencode($id_mesero) : ''; ?>">Entradas</a></li>
                 <li><a href="?tipo_platillo=Plato Principal&mesa_id=<?php echo urlencode($id_mesa); ?><?php echo $id_mesero > 0 ? '&id_mesero=' . urlencode($id_mesero) : ''; ?>">Platos principales</a></li>
@@ -241,7 +241,7 @@ $cart_count = isset($_SESSION['carrito']) ? count($_SESSION['carrito']) : 0;
                     echo '        </form>';
                     echo '    </div>';
                     echo '    <div class="meal-image">';
-                    echo '        <img src="' . htmlspecialchars($item['ruta_foto']) . '" alt="' . htmlspecialchars($item['nombre']) . '">';
+                    echo '        <img src="../../imagenes/platillos/' . htmlspecialchars($item['ruta_foto']) . '" alt="' . htmlspecialchars($item['nombre']) . '">';
                     echo '    </div>';
                     echo '</div>';
                 }

@@ -19,9 +19,8 @@
 
             <select id="type-filter">
                 <option value="all">Todos</option>
-                <option value="delivery">Delivery</option>
-                <option value="pickup">Pickup</option>
-                <option value="dine-in">Dine-In</option>
+                <option value="pickup">Para llevar</option>
+                <option value="dine-in">Para servir</option>
             </select>
         </div>
     </div>

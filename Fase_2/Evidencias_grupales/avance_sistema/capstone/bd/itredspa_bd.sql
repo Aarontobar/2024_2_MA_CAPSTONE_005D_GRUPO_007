@@ -122,6 +122,8 @@ CREATE TABLE Pedido (
     fecha DATE NOT NULL,
     estado ENUM('recibido', 'en preparación', 'preparado', 'servido', 'completado', 'cancelado') NOT NULL DEFAULT 'recibido',
     tipo ENUM('Delivery', 'Para Llevar', 'Para Servir') NOT NULL DEFAULT 'Para Servir',
+    prioridad ENUM('prioritario', 'normal') NOT NULL DEFAULT 'normal', -- Nuevo campo agregado
+    estado_pago ENUM('pagado', 'pendiente') NOT NULL DEFAULT 'pendiente', -- Nuevo campo para estado del pago
     PRIMARY KEY (id_pedido),
     FOREIGN KEY (id_detalle_mesero_mesa) REFERENCES detalle_mesero_mesa(id_detalle) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
@@ -156,6 +158,19 @@ CREATE TABLE mensajes (
     PRIMARY KEY (id_mensaje),
     FOREIGN KEY (id_usuario_envia) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario_recibe) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+-- Crear la tabla `Reseñas`
+CREATE TABLE Reseñas (
+    id_reseña INT NOT NULL AUTO_INCREMENT,
+    id_pedido INT NOT NULL, -- Referencia al pedido que se está evaluando
+    nombre_cliente VARCHAR(100) NOT NULL, -- Nombre del cliente que deja la reseña
+    apellido_cliente VARCHAR(100) NOT NULL, -- Apellido del cliente
+    calificacion DECIMAL(2, 1) NOT NULL CHECK (calificacion BETWEEN 1.0 AND 5.0), -- Calificación con decimales entre 1.0 y 5.0
+    comentario TEXT, -- Comentario opcional del cliente
+    fecha_reseña DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Fecha en la que se deja la reseña
+    PRIMARY KEY (id_reseña),
+    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido) ON DELETE CASCADE -- Si se elimina el pedido, también se elimina la reseña
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 COMMIT;

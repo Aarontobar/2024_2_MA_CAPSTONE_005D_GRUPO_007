@@ -113,6 +113,16 @@ button {
     border: 1px solid #ddd;
 }
 
+/* Estilos para pedidos prioritarios */
+.prioritario {
+    border-left: 5px solid #ffcc00; /* Borde dorado */
+}
+
+/* Botones dorados en pedidos prioritarios */
+.prioritario button {
+    background-color: #ffcc00; /* Color dorado para los botones */
+}
+
 
 @media (max-width: 1024px) {
     .orders-container {

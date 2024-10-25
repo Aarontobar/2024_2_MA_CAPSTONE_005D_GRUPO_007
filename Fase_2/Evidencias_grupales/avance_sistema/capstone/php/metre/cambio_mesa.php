@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 3. Registrar el detalle de la mesa en la tabla correspondiente
             $sql_detalle = "INSERT INTO detalle_mesero_mesa (id_mesa, id_usuario) VALUES (?, ?)";
             $stmt_detalle = $conn->prepare($sql_detalle);
-            $stmt_detalle->bind_param("ii", $id_mesa, $id_usuario);
+            $stmt_detalle->bind_param("ii", $id_mesa, $id_mesero);
 
             if ($stmt_detalle->execute()) {
                 echo "Mesa actualizada y detalle registrado con éxito.";

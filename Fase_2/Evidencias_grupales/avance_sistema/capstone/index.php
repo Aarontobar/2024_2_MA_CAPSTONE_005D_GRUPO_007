@@ -8,33 +8,33 @@
   <link href="css/inicio.css" rel="stylesheet"/>
  </head>
  <body>
-  <div class="navbar">
-   <div class="logo">
-    Restaurante
-   </div>
-   <div class="nav-links">
-    <a href="#">
-     Home
-    </a>
-    <a href="php/restaurante/nosotros.php">
-     Nosotros
-    </a>
-    <a href="php/restaurante/reseñas.php">
-     Reseñas
-    </a>
-    <a href="php/menu/ver_menu.php">
-     Pedir
-    </a>
-   </div>
-   <a class="sign-in" href="php/login/login.php">
-    Trabajadores
-   </a>
-  </div>
+    <div class="navbar">
+        <div class="logo">
+            <img src="imagenes/logo.png" alt="Logo del Restaurante" />
+        </div>
+        <div class="nav-links">
+            <a href="#">
+                Home
+            </a>
+            <a href="php/restaurante/nosotros.php">
+                Nosotros
+            </a>
+            <a href="php/restaurante/reseñas.php">
+                Reseñas
+            </a>
+            <a href="php/menu/ver_menu.php">
+                Pedir
+            </a>
+        </div>
+        <a class="sign-in" href="php/login/login.php">
+            Trabajadores
+        </a>
+    </div>
   <div class="hero">
    <img alt="Interior of Cafe 21 with modern decor and comfortable seating" height="400" src="imagenes/inicio.jpg" width="800"/>
    <div class="hero-text">
     <h1>
-     Cafe 21
+     Tomoshibi
     </h1>
     <p>
      Farm-to-table comfort food in a modern, clean setting

@@ -9,9 +9,9 @@
  </head>
  <body>
  <div class="navbar">
-   <div class="logo">
-    味の道 (Aji no Michi)
-   </div>
+    <div class="logo">
+      <img src="../../imagenes/logo.png" alt="Logo del Restaurante" />
+    </div>
    <div class="nav-links">
     <a href="../../index.php">
      Home

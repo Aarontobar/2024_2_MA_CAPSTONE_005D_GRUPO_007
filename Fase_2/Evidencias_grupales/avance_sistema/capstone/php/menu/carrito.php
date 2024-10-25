@@ -84,7 +84,7 @@ $id_mesero = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito</title>
-    <link rel="stylesheet" href="../../css/ver_menu.css">
+    <link rel="stylesheet" href="../../css/carrito.css">
     <script src="https://www.paypal.com/sdk/js?client-id=AUD_x5nmUmrip9LqstY_CsPhj4gIxyf_c4C98xCmkluVCTupFrIOd2Q5Soinn_OF-r4Hl6rHJodJsuVJ"></script>
 </head>
 <body>
@@ -99,17 +99,19 @@ $id_mesero = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : null;
         <?php if (empty($cart_items)) : ?>
             <p>No hay productos en el carrito.</p>
         <?php else : ?>
-            <ul>
+            <ul class="cart-items">
                 <?php foreach ($cart_count as $id => $item) : ?>
                     <?php if (isset($products[$id])): ?>
-                        <li>
-                            <img src="<?php echo htmlspecialchars($products[$id]['ruta_foto']); ?>" alt="<?php echo htmlspecialchars($products[$id]['nombre_platillo']); ?>" style="width: 100px; height: auto;">
-                            <strong><?php echo htmlspecialchars($products[$id]['nombre_platillo']); ?></strong> - 
-                            <?php echo htmlspecialchars($products[$id]['descripcion_platillo']); ?> - 
-                            Cantidad: <?php echo htmlspecialchars($item['quantity']); ?> - 
-                            Precio Unitario: $<?php echo htmlspecialchars(number_format($products[$id]['precio'], 2, '.', '')); ?> - 
-                            Total: $<?php echo htmlspecialchars(number_format($products[$id]['precio'] * $item['quantity'], 2, '.', '')); ?>
+                        <li class="cart-item">
+                        <img src="../../imagenes/platillos/<?php echo htmlspecialchars($products[$id]['ruta_foto']); ?>" alt="<?php echo htmlspecialchars($products[$id]['nombre_platillo']); ?>" style="width: 200px; height: auto;">
+                            <div>
+                                <strong><?php echo htmlspecialchars($products[$id]['nombre_platillo']); ?></strong><br>
+                                Cantidad: <?php echo htmlspecialchars($item['quantity']); ?><br>
+                                Precio Unitario: $<?php echo htmlspecialchars(number_format($products[$id]['precio'], 2, '.', '')); ?><br>
+                                Total: $<?php echo htmlspecialchars(number_format($products[$id]['precio'] * $item['quantity'], 2, '.', '')); ?>
+                            </div>
                         </li>
+                        <hr class="separator">
                         <?php 
                         // Sumar al total general
                         $total += $products[$id]['precio'] * $item['quantity'];
@@ -121,34 +123,45 @@ $id_mesero = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : null;
             </ul>
 
             <!-- Muestra el monto total a pagar -->
-            <h2>Total: $<?php echo htmlspecialchars(number_format($total, 2, '.', '')); ?></h2>
+            <div class="total-section">
+                <h2>Total: $<?php echo htmlspecialchars(number_format($total, 2, '.', '')); ?></h2>
+            </div>
 
-            <!-- Botón de PayPal -->
-            <div id="paypal-button-container"></div>
-            <script>
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: '<?php echo number_format($total, 2, '.', ''); ?>' // Monto total
-                                }
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            alert('Transacción completada por ' + details.payer.name.given_name);
-                            // Aquí puedes redirigir a otra página o guardar la información del pedido
-                            window.location.href = 'generar_pedido.php?orderId=' + data.orderID + '&mesa_id=<?php echo htmlspecialchars($mesa_id); ?>&id_mesero=<?php echo htmlspecialchars($id_mesero); ?>';
-                        });
-                    },
-                    onError: function(err) {
-                        console.error(err);
-                        alert('Ocurrió un error durante el proceso de pago. Intenta nuevamente.');
-                    }
-                }).render('#paypal-button-container');
-            </script>
+            <?php if ($mesa_id === null || $mesa_id === 0): ?>
+                <!-- Muestra el botón de PayPal si no hay ID de mesa -->
+                <div class="paypal-container">
+                    <div id="paypal-button-container"></div>
+                </div>
+                <script>
+                    paypal.Buttons({
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: '<?php echo number_format($total, 2, '.', ''); ?>' // Monto total
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                                alert('Transacción completada por ' + details.payer.name.given_name);
+                                window.location.href = 'generar_pedido.php?orderId=' + data.orderID + '&mesa_id=&id_mesero=<?php echo htmlspecialchars($id_mesero); ?>';
+                            });
+                        },
+                        onError: function(err) {
+                            console.error(err);
+                            alert('Ocurrió un error durante el proceso de pago. Intenta nuevamente.');
+                        }
+                    }).render('#paypal-button-container');
+                </script>
+            <?php else: ?>
+                <form action="generar_pedido.php" method="GET">
+                    <input type="hidden" name="mesa_id" value="<?php echo htmlspecialchars($mesa_id); ?>">
+                    <input type="hidden" name="id_mesero" value="<?php echo htmlspecialchars($id_mesero); ?>">
+                    <button type="submit">Confirmar Pedido</button>
+                </form>
+            <?php endif; ?>
         <?php endif; ?>
     </main>
 </body>

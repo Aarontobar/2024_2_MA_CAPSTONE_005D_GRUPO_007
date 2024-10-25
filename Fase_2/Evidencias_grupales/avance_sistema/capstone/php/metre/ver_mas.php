@@ -176,13 +176,43 @@ document.getElementById('search').addEventListener('input', function() {
 
 // Aquí puedes agregar las funciones que se llaman al hacer clic en los botones
 function prioritizeOrder(id) {
-    alert('Priorizar pedido ID: ' + id);
-    // Implementa la llamada AJAX para priorizar el pedido
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'cambio_estado.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                alert('Pedido priorizado con éxito.');
+                location.reload(); // Recargar la página para reflejar los cambios
+            } else {
+                alert('Error al priorizar el pedido: ' + response.error);
+            }
+        } else {
+            alert('Error en la solicitud: ' + xhr.status);
+        }
+    };
+    xhr.send('action=prioritize&id_pedido=' + id);
 }
 
 function cancelOrder(id) {
-    alert('Cancelar pedido ID: ' + id);
-    // Implementa la llamada AJAX para cancelar el pedido
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'cambio_estado.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                alert('Pedido cancelado con éxito.');
+                location.reload(); // Recargar la página para reflejar los cambios
+            } else {
+                alert('Error al cancelar el pedido: ' + response.error);
+            }
+        } else {
+            alert('Error en la solicitud: ' + xhr.status);
+        }
+    };
+    xhr.send('action=cancel&id_pedido=' + id);
 }
 
 function toggleAvailability(id) {
