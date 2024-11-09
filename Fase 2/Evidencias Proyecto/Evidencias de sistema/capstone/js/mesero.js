@@ -19,117 +19,131 @@ function obtenerDatos() {
     // Aquí puedes continuar con la lógica de la función
     console.log('ID de mesero:', id_usuario);
     fetch(`get_mesas.php?id_usuario=${id_usuario}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const tableList = document.querySelector('.table-list');
-        tableList.innerHTML = ''; // Limpiar la lista actual
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableList = document.querySelector('.table-list');
+            tableList.innerHTML = ''; // Limpiar la lista actual
 
-        // Llenar la lista con los nuevos datos
-        data.mesas.forEach(mesa => {
-            const estado_mesa = mesa.estado;
-            const pedido_activo = data.pedidos[mesa.id_mesa];
-        
-            const listItem = document.createElement('li');
-            listItem.classList.add('table-item', estado_mesa.toLowerCase().replace(' ', '-')); // Agregar clase según el estado
-        
-            const statusText = document.createElement('span');
-            statusText.innerText = `Mesa ID: ${mesa.id_mesa}`;
-            
-            const statusSpan = document.createElement('span');
-            statusSpan.classList.add('table-status');
-        
-            // Div para los detalles
-            const detailsDiv = document.createElement('div');
-            detailsDiv.classList.add('details');
-        
-            // Determinar el estado de la mesa y el pedido
-            if (estado_mesa === 'Disponible') {
-                statusSpan.innerText = "Mesa disponible";
-                agregarNotificacion(mesa.id_mesa, "la mesa ha sido asignada y está disponible."); // Notificación
-            } else if (estado_mesa === 'Ocupada' && !pedido_activo) {
-                statusSpan.innerText = "Mesa ocupada. Debe tomar el pedido.";
-                detailsDiv.innerHTML = `<p>La mesa está ocupada. Debe tomar el pedido.</p>
-                                        <a href="../menu/ver_menu.php?mesa_id=${mesa.id_mesa}&id_usuario=${id_usuario}" class="action-button">Tomar Pedido</a>`;
-            } else if (estado_mesa === 'Reservada') {
-                statusSpan.innerText = "Mesa reservada";
-                agregarNotificacion(mesa.id_mesa, "la mesa está reservada."); // Notificación
-            } else if (estado_mesa === 'En Espera') {
-                statusSpan.innerText = "Mesa en espera. Debe tomar el pedido.";
-                detailsDiv.innerHTML = `<p>La mesa está en espera. Debe tomar el pedido.</p>`;
-            } else if (estado_mesa === 'Para Limpiar') {
-                statusSpan.innerText = "Mesa necesita limpieza";
-                detailsDiv.innerHTML = `<p>La mesa necesita ser limpiada.</p>
-                                        <button class="action-button" onclick="marcarMesaComoLimpia(${mesa.id_mesa})">Marcar como limpia</button>`;
-            }
-        
-            // Asignar clase según el estado de la mesa
-            switch (estado_mesa) {
-                case 'Disponible':
-                    listItem.classList.add('mesa-disponible');
-                    break;
-                case 'Ocupada':
-                    listItem.classList.add('mesa-ocupada');
-                    break;
-                case 'Reservada':
-                    listItem.classList.add('mesa-reservada');
-                    break;
-                case 'En Espera':
-                    listItem.classList.add('mesa-en-espera');
-                    break;
-                case 'Para Limpiar':
-                    listItem.classList.add('mesa-para-limpiar');
-                    break;
-            }
-        
-            // Mostrar estado del pedido si hay uno
-            if (pedido_activo) {
-                if (pedido_activo.estado === 'completado') {
-                    statusSpan.innerText += " | Pedido completado";
-                    detailsDiv.innerHTML = `<p>El pedido ha sido completado. La mesa debe ser limpiada.</p>
-                                            <button class="action-button" onclick="marcarMesaComoLimpia(${mesa.id_mesa})">Marcar como limpia</button>`;
-                    listItem.classList.add('pedido-completado'); // Clase adicional
-                } else if (pedido_activo.estado === 'preparado') {
-                    detailsDiv.innerHTML = `<p>El pedido está listo para ser llevado a la mesa.</p>
-                                            <button class="action-button" data-pedido-id="${pedido_activo.id_pedido}">Pedido llevado</button>`;
-                    
-                    // Asignar el evento justo después de agregar el botón
-                    const actionButton = detailsDiv.querySelector('.action-button');
-                    actionButton.addEventListener('click', function() {
-                        const pedidoId = this.getAttribute('data-pedido-id');
-                        if (pedidoId) {
-                            marcarPedidoComoLlevado(pedidoId); // Llama a la función para actualizar el estado
-                        }
-                    });
-                } else {
-                    detailsDiv.innerHTML = `<p><strong>Pedido ID:</strong> ${pedido_activo.id_pedido}</p>
-                                            <p><strong>Total:</strong> $${pedido_activo.total_cuenta}</p>
-                                            <p><strong>Hora del pedido:</strong> ${pedido_activo.hora}</p>`;
+            // Llenar la lista con los nuevos datos
+            data.mesas.forEach(mesa => {
+                const estado_mesa = mesa.estado;
+                const pedido_activo = data.pedidos[mesa.id_mesa];
+
+
+                console.log('Estado de la mesa:', estado_mesa);
+                console.log('Pedido activo para la mesa:', pedido_activo);
+
+                const listItem = document.createElement('li');
+                listItem.classList.add('table-item', estado_mesa.toLowerCase().replace(' ', '-')); // Agregar clase según el estado
+
+                const statusText = document.createElement('span');
+                statusText.innerText = `Mesa ID: ${mesa.id_mesa}`;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.classList.add('table-status');
+
+                // Determinar el estado de la mesa y el pedido
+                if (estado_mesa === 'Disponible') {
+                    statusSpan.innerText = "Mesa disponible";
+                    agregarNotificacion(mesa.id_mesa, "la mesa ha sido asignada y está disponible."); // Notificación
+                } else if (estado_mesa === 'Ocupada' && !pedido_activo) {
+                    statusSpan.innerText = "Mesa ocupada. Debe tomar el pedido.";
+                    agregarNotificacion(mesa.id_mesa, "la mesa está ocupada, debe tomar el pedido."); // Notificación
+                } else if (estado_mesa === 'Reservada') {
+                    statusSpan.innerText = "Mesa reservada";
+                    agregarNotificacion(mesa.id_mesa, "la mesa está reservada."); // Notificación
+                } else if (estado_mesa === 'En Espera') {
+                    statusSpan.innerText = "Mesa en espera. Debe tomar el pedido.";
+                    agregarNotificacion(mesa.id_mesa, "la mesa está en espera, debe tomar el pedido."); // Notificación
+                } else if (estado_mesa === 'Para Limpiar') {
+                    statusSpan.innerText = "Mesa necesita limpieza";
+                    agregarNotificacion(mesa.id_mesa, "la mesa necesita limpieza"); // Notificación
                 }
-            }
-        
-            // Agregar detalles a la lista
-            listItem.appendChild(statusText);
-            listItem.appendChild(statusSpan);
-            listItem.appendChild(detailsDiv);
-            tableList.appendChild(listItem);
-        });
-        
 
-        // Reasignar el event listener después de agregar los nuevos elementos
-        document.querySelectorAll('.table-item').forEach(item => {
-            item.addEventListener('click', () => {
-                item.classList.toggle('active'); // Cambia el estado activo
+                // Asignar clase según el estado de la mesa
+                if (estado_mesa === 'Disponible') {
+                    listItem.classList.add('mesa-disponible');
+                } else if (estado_mesa === 'Ocupada') {
+                    listItem.classList.add('mesa-ocupada');
+                } else if (estado_mesa === 'Reservada') {
+                    listItem.classList.add('mesa-reservada');
+                } else if (estado_mesa === 'En Espera') {
+                    listItem.classList.add('mesa-en-espera');
+                } else if (estado_mesa === 'Para Limpiar') {
+                    listItem.classList.add('mesa-para-limpiar');
+                }
+
+                // Mostrar estado del pedido si hay uno
+                if (pedido_activo) {
+                    if (pedido_activo.estado === 'preparado') {
+                        statusSpan.innerText += " | Pedido preparado";
+                        agregarNotificacion(mesa.id_mesa, "el pedido está listo para ser llevado."); // Notificación
+                    } else if (pedido_activo.estado === 'en preparación') {
+                        statusSpan.innerText += " | Pedido en preparación";
+                    } else if (pedido_activo.estado === 'recibido') {
+                        statusSpan.innerText += " | Pedido recibido";
+                    } else if (pedido_activo.estado === 'servido') {
+                        statusSpan.innerText += " | Pedido servido";
+                    } else if (pedido_activo.estado === 'completado') {
+                        statusSpan.innerText += " | Pedido completado";
+                    } else if (pedido_activo.estado === 'cancelado') {
+                        statusSpan.innerText += " | Pedido cancelado";
+                    }
+                }
+
+                listItem.appendChild(statusText);
+                listItem.appendChild(statusSpan);
+
+                // Detalles
+                const detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('details');
+
+                if (estado_mesa === 'Ocupada' && !pedido_activo) {
+                    detailsDiv.innerHTML = `<p>La mesa está ocupada. Debe tomar el pedido.</p>
+                                            <a href="../menu/ver_menu.php?mesa_id=${mesa.id_mesa}&id_usuario=${id_usuario}" class="action-button">Tomar Pedido</a>`;
+                } else if (estado_mesa === 'Para Limpiar') {
+                    detailsDiv.innerHTML = `<p>La mesa necesita ser limpiada.</p>
+                                            <button class="action-button">Marcar como limpia</button>`;
+                } else if (pedido_activo) {
+                    // Dentro del bloque donde creas los botones dinámicamente
+                    if (pedido_activo.estado === 'preparado') {
+                        detailsDiv.innerHTML = `<p>El pedido está listo para ser llevado a la mesa.</p>
+                                                <button class="action-button" data-pedido-id="${pedido_activo.id_pedido}">Pedido llevado</button>`;
+
+                        // Asegúrate de asignar el evento justo después de agregar el botón
+                        const actionButton = detailsDiv.querySelector('.action-button');
+                        actionButton.addEventListener('click', function() {
+                            const pedidoId = this.getAttribute('data-pedido-id');
+                            if (pedidoId) {
+                                marcarPedidoComoLlevado(pedidoId); // Llama a la función para actualizar el estado
+                            }
+                        });
+                    } else {
+                        detailsDiv.innerHTML = `<p><strong>Pedido ID:</strong> ${pedido_activo.id_pedido}</p>
+                                                <p><strong>Total:</strong> $${pedido_activo.total_cuenta}</p>
+                                                <p><strong>Hora del pedido:</strong> ${pedido_activo.hora}</p>`;
+                    }
+                }
+
+                listItem.appendChild(detailsDiv);
+                tableList.appendChild(listItem);
             });
+
+            // Reasignar el event listener después de agregar los nuevos elementos
+            document.querySelectorAll('.table-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('active'); // Cambia el estado activo
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Hubo un problema con la solicitud Fetch:', error);
         });
-    })
-    .catch(error => {
-        console.error('Hubo un problema con la solicitud Fetch:', error);
-    });
 }
 
 // Manejo de notificaciones
@@ -144,17 +158,13 @@ notificationButton.addEventListener('click', () => {
 
 // Función para agregar notificaciones
 function agregarNotificacion(mesaId, mensaje) {
-    const notificacionesDiv = document.getElementById('notificaciones'); // Asegúrate de que este div exista
-    const notificacionItem = document.createElement('div');
-    notificacionItem.classList.add('notificacion');
-    notificacionItem.innerText = `Mesa ID ${mesaId}: ${mensaje}`;
-    
-    notificacionesDiv.appendChild(notificacionItem);
-    
-    // Opcional: Puedes agregar un temporizador para eliminar la notificación después de unos segundos
-    setTimeout(() => {
-        notificacionesDiv.removeChild(notificacionItem);
-    }, 5000);
+    const notificacionKey = `Mesa(${mesaId}): ${mensaje}`; // Clave única para la notificación
+    if (!shownNotifications.has(notificacionKey)) { // Verificar si ya se mostró
+        const li = document.createElement('li');
+        li.textContent = notificacionKey;
+        notificationList.appendChild(li);
+        shownNotifications.add(notificacionKey); // Marca la notificación como mostrada
+    }
 }
 
 // Llamar a la función para obtener datos al cargar la página
@@ -257,28 +267,4 @@ function marcarPedidoComoLlevado(pedidoId) {
 
     // Enviar el ID del pedido y el nuevo estado al servidor
     xhr.send('id_pedido=' + pedidoId + '&nuevo_estado=servido');
-}
-
-function marcarMesaComoLimpia(id_mesa) {
-    const data = new FormData();
-    data.append('id_mesa', id_mesa);
-
-    fetch('marcar_mesa_limpia.php', {
-        method: 'POST',
-        body: data,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            agregarNotificacion(id_mesa, data.message);
-            // Aquí puedes actualizar la UI para reflejar que la mesa está disponible
-            // Por ejemplo, puedes recargar la información de la mesa o actualizar su estado visualmente
-        } else {
-            agregarNotificacion(id_mesa, data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        agregarNotificacion(id_mesa, "Error al marcar la mesa como limpia.");
-    });
 }
