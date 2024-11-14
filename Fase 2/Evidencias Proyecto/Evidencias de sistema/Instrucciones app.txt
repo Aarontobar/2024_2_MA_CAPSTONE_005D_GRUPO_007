@@ -1,0 +1,15 @@
+1-Eliminar el antiguo expo-cli global:
+
+	npm uninstall -g expo-cli
+
+2-Crear un nuevo proyecto Expo usando npx:
+
+	npx create-expo-app meseroapp-new
+
+3-Navegar al nuevo proyecto:
+
+	cd meseroapp-new
+
+npm install
+
+npx expo start
