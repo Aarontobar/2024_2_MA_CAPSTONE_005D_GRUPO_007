@@ -20,18 +20,20 @@ const CartScreen = ({ route, navigation }: { route: any, navigation: any }) => {
   const getTotalPrice = () => {
     return carrito.reduce((total: number, item: Platillo) => total + (item.precio * item.quantity), 0).toFixed(2);
   };
-
+  
   const getTotalItems = () => {
     return carrito.reduce((total: number, item: Platillo) => total + item.quantity, 0);
   };
-
+  
   const confirmOrder = () => {
     const totalPrice = getTotalPrice();
     console.log(`Enviando pedido con ID de mesa: ${mesaId}, ID de usuario: ${userId}, y total: ${totalPrice}`);
     Alert.alert('Confirmación', `Enviando pedido con ID de mesa: ${mesaId}, ID de usuario: ${userId}, y total: ${totalPrice}`);
-
+  
     const url = getApiUrl(`menu/generar_pedido_app.php?mesa_id=${mesaId}&id_mesero=${userId}&total=${totalPrice}`);
-    axios.get(url)
+    const carritoParams = carrito.map(item => `carrito[]=${item.id_platillo},${item.quantity},${item.precio}`).join('&');
+
+    axios.post(`${url}&${carritoParams}`)
       .then(response => {
         const data = response.data as { success: boolean; message?: string };
         if (data.success) {
@@ -46,12 +48,12 @@ const CartScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         Alert.alert('Error', 'Hubo un problema al confirmar el pedido.');
       });
   };
-
+  
   const totalItems = getTotalItems();
   const shouldShowConfirmButton = totalItems > 0;
   console.log(`Cantidad de ítems en el carrito: ${totalItems}`);
   console.log(`Mostrar botón de confirmar pedido: ${shouldShowConfirmButton}`);
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Carrito</Text>

@@ -147,6 +147,11 @@ $mesas = $conn->query("SELECT COUNT(*) as totalMesas FROM Mesa")->fetch_assoc();
         width: 100%;
         padding: 8px;
     }
+
+    .scrollable-container {
+        max-height: 300px;
+        overflow-y: auto;
+    }
     </style>
 </head>
 <body>
@@ -164,7 +169,7 @@ $mesas = $conn->query("SELECT COUNT(*) as totalMesas FROM Mesa")->fetch_assoc();
             <input type="checkbox" id="togglePlatillos" name="togglePlatillos">
             <label for="togglePlatillos">Platillos Disponibles</label>
 
-            <div id="platillosContainer" class="section" style="display:none;">
+            <div id="platillosContainer" class="section scrollable-container" style="display:none;">
                 <table class="table table-bordered">
                     <thead>
                         <tr>

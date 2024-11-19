@@ -214,28 +214,7 @@ INSERT INTO Mesa (cantidad_asientos, estado) VALUES
 (2, 'Ocupada'),
 (8, 'Reservada');
 
--- Insertar detalle mesero mesa
-INSERT INTO detalle_mesero_mesa (id_usuario, id_mesa, estado) VALUES
-(3, 1, 'activo'),   -- Mesero Pablo
-(5, 2, 'activo'),   -- Mesero Ana
-(6, 3, 'inactivo'), -- Mesero Luis
-(7, 4, 'activo'),   -- Mesero Marta
-(8, 5, 'activo'),   -- Mesero Carlos
-(9, 6, 'activo'),   -- Mesero Jorge
-(10, 7, 'activo'),  -- Mesero Ricardo
-(3, 8, 'activo'),   -- Mesero Pablo
-(5, 9, 'inactivo'), -- Mesero Ana
-(6, 10, 'activo'),  -- Mesero Luis
-(7, 11, 'activo'),  -- Mesero Marta
-(8, 12, 'activo'),  -- Mesero Carlos
-(9, 13, 'activo'),  -- Mesero Jorge
-(10, 14, 'inactivo'),-- Mesero Ricardo
-(3, 15, 'activo'),  -- Mesero Pablo
-(5, 16, 'activo'),  -- Mesero Ana
-(6, 17, 'activo'),  -- Mesero Luis
-(7, 18, 'activo'),  -- Mesero Marta
-(8, 19, 'activo'),  -- Mesero Carlos
-(9, 20, 'inactivo');-- Mesero Jorge
+
 
 -- Insertar reservas
 INSERT INTO Reserva (nombre_reserva, apellido_reserva, cantidad_personas, hora, fecha, id_mesa, estado_reserva) VALUES
@@ -343,17 +322,17 @@ INSERT INTO promociones (nombre_promocion, descripcion, descuento, estado, condi
 ('Promoción Fin de Semana', '20% en platillos principales sábado y domingo', 20.00, 'Activo', '{"dia": ["Sábado", "Domingo"]}', '{"tipo": "descuento", "valor": 20}', 'promocion_fin_semana.jpg');
 
 -- Insertar pedidos
-INSERT INTO Pedido (id_detalle_mesero_mesa, total_cuenta, hora, fecha, estado, tipo) VALUES
-(1, 50000.00, '12:00:00', '2024-09-01', 'recibido', 'Para Servir'),
-(2, 30000.00, '12:30:00', '2024-09-01', 'recibido', 'Delivery'),
-(1, 25000.00, '13:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
-(2, 45000.00, '13:15:00', '2024-09-01', 'recibido', 'Para Servir'),
-(3, 60000.00, '13:30:00', '2024-09-01', 'recibido', 'Delivery'),
-(1, 35000.00, '14:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
-(2, 20000.00, '14:15:00', '2024-09-01', 'recibido', 'Para Servir'),
-(3, 55000.00, '14:30:00', '2024-09-01', 'recibido', 'Delivery'),
-(2, 70000.00, '15:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
-(3, 80000.00, '15:30:00', '2024-09-01', 'recibido', 'Para Servir');
+INSERT INTO Pedido (total_cuenta, hora, fecha, estado, tipo) VALUES
+(50000.00, '12:00:00', '2024-09-01', 'recibido', 'Para Servir'),
+(30000.00, '12:30:00', '2024-09-01', 'recibido', 'Delivery'),
+(25000.00, '13:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
+(45000.00, '13:15:00', '2024-09-01', 'recibido', 'Para Servir'),
+(60000.00, '13:30:00', '2024-09-01', 'recibido', 'Delivery'),
+(35000.00, '14:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
+(20000.00, '14:15:00', '2024-09-01', 'recibido', 'Para Servir'),
+(55000.00, '14:30:00', '2024-09-01', 'recibido', 'Delivery'),
+(70000.00, '15:00:00', '2024-09-01', 'recibido', 'Para Llevar'),
+(80000.00, '15:30:00', '2024-09-01', 'recibido', 'Para Servir');
 
 -- Insertar detalles de pedido y platillo
 INSERT INTO Detalle_Pedido_Platillo (id_pedido, id_platillo, cantidad) VALUES

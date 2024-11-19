@@ -42,9 +42,12 @@ switch ($tipo) {
         break;
     case 'mesas':
         $titulo = "Estado de Mesas";
-        $query = "SELECT id_mesa, estado, cantidad_asientos FROM Mesa WHERE estado = 'Disponible'";
+        $query = "SELECT M.id_mesa, M.estado, M.cantidad_asientos, U.nombre_usuario AS mesero_asignado
+                  FROM Mesa M
+                  LEFT JOIN detalle_mesero_mesa DMM ON M.id_mesa = DMM.id_mesa AND DMM.estado = 'activo'
+                  LEFT JOIN Usuarios U ON DMM.id_usuario = U.id_usuario";
         if ($search) {
-            $query .= " WHERE id_mesa = '$search' OR cantidad_asientos LIKE '%$search%'";
+            $query .= " WHERE M.id_mesa = '$search' OR M.cantidad_asientos LIKE '%$search%'";
         }
         break;
     default:
@@ -115,6 +118,7 @@ $resultado = $conn->query($query);
                     <th>ID Mesa</th>
                     <th>Cantidad de Asientos</th>
                     <th>Estado</th>
+                    <th>Mesero Asignado</th>
                     <th>Acciones</th>
                 <?php endif; ?>
             </tr>
@@ -148,8 +152,11 @@ $resultado = $conn->query($query);
                         <td><?= $fila['id_mesa'] ?></td>
                         <td><?= $fila['cantidad_asientos'] ?></td>
                         <td><?= $fila['estado'] ?></td>
+                        <td><?= $fila['mesero_asignado'] ? $fila['mesero_asignado'] : 'No asignado' ?></td>
                         <td class="text-end">
-                            <button class="btn btn-info" onclick="assignTable(<?= $fila['id_mesa'] ?>)">Asignar</button>
+                            <?php if (!$fila['mesero_asignado']): ?>
+                                <button class="btn btn-info" onclick="assignTable(<?= $fila['id_mesa'] ?>)">Asignar</button>
+                            <?php endif; ?>
                         </td>
                     <?php endif; ?>
                 </tr>

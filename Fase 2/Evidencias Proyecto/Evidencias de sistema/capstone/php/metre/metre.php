@@ -1,5 +1,4 @@
 <?php
-session_start();
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -74,16 +73,16 @@ $mesas = $conn->query("SELECT id_mesa, estado FROM Mesa LIMIT 5");
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pedidos</a>
+                    <a class="nav-link" href="ver_mas.php?tipo=pedidos">Pedidos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Mesas</a>
+                    <a class="nav-link" href="ver_mas.php?tipo=mesas">Mesas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Reservaciones</a>
+                    <a class="nav-link" href="ver_mas.php?tipo=reservas">Reservaciones</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Platillos</a>
+                    <a class="nav-link" href="ver_mas.php?tipo=platillos">Platillos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -131,31 +130,45 @@ $mesas = $conn->query("SELECT id_mesa, estado FROM Mesa LIMIT 5");
         <!-- Platillos -->
         <div class="col-md-4">
             <div class="dashboard-module">
-                <h5>Platillos</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Disponibilidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while($platillo = $platillos->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= $platillo['nombre_platillo'] ?></td>
-                            <td>
-                                <select class="form-select">
-                                    <option <?= $platillo['estado'] == 'Disponible' ? 'selected' : '' ?>>Disponible</option>
-                                    <option <?= $platillo['estado'] == 'No Disponible' ? 'selected' : '' ?>>No Disponible</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-                <a href="ver_mas.php?tipo=platillos" class="btn btn-primary">Ver más</a>
+            <h5>Platillos</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Disponibilidad</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php while($platillo = $platillos->fetch_assoc()): ?>
+                <tr>
+                    <td><?= $platillo['nombre_platillo'] ?></td>
+                    <td>
+                    <select class="form-select" onchange="cambiarEstadoPlatillo('<?= $platillo['nombre_platillo'] ?>', this.value)">
+                        <option <?= $platillo['estado'] == 'Disponible' ? 'selected' : '' ?>>Disponible</option>
+                        <option <?= $platillo['estado'] == 'No Disponible' ? 'selected' : '' ?>>No Disponible</option>
+                    </select>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+                </tbody>
+            </table>
+            <a href="ver_mas.php?tipo=platillos" class="btn btn-primary">Ver más</a>
             </div>
         </div>
+
+        <script>
+            function cambiarEstadoPlatillo(nombrePlatillo, nuevoEstado) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'cambiar_estado_platillo.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
+                }
+            };
+            xhr.send('nombre_platillo=' + encodeURIComponent(nombrePlatillo) + '&estado=' + encodeURIComponent(nuevoEstado));
+            }
+        </script>
 
         <!-- Reservas -->
         <div class="col-md-4">
@@ -180,6 +193,7 @@ $mesas = $conn->query("SELECT id_mesa, estado FROM Mesa LIMIT 5");
                     </tbody>
                 </table>
                 <a href="ver_mas.php?tipo=reservas" class="btn btn-primary">Ver más</a>
+                <a href="crear_reserva.php" class="btn btn-success">Crear Reserva</a>
             </div>
         </div>
     </div>

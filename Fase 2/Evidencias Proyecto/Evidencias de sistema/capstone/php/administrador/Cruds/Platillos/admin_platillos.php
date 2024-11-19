@@ -78,7 +78,7 @@
                                     <td>{$row['estado']}</td>
                                     <td>{$row['tiempo_preparacion']}</td>
                                     <td>{$row['tipo_platillo']}</td>
-                                    <td><img src='{$row['ruta_foto']}' alt='Foto' width='100'></td>
+                                    <td><img src='../../../../imagenes/platillos/{$row['ruta_foto']}' alt='Foto' width='100'></td>
                                     <td>
                                         <button class='btn btn-warning btn-sm' onclick='mostrarFormularioEditar({$row['id_platillo']})'>Modificar</button>
                                         <button class='btn btn-danger btn-sm' onclick='eliminarPlatillo({$row['id_platillo']})'>Eliminar</button>
@@ -96,7 +96,7 @@
 
             <div id="crearPlatilloForm" style="display:none;">
                 <h2>Crear Nuevo Platillo</h2>
-                <form id="formCrearPlatillo" action="crud_platillos.php" method="post">
+                <form id="formCrearPlatillo" action="crud_platillos.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="create">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
@@ -122,8 +122,8 @@
                         <input type="time" class="form-control" id="tiempo_preparacion" name="tiempo_preparacion" required>
                     </div>
                     <div class="mb-3">
-                        <label for="ruta_foto" class="form-label">Foto (URL)</label>
-                        <input type="text" class="form-control" id="ruta_foto" name="ruta_foto">
+                        <label for="foto" class="form-label">Foto</label>
+                        <input type="file" class="form-control"  id="ruta_foto" name="ruta_foto" accept="image/*" required>
                     </div>
                     <div class="mb-3">
                         <label for="tipo_platillo" class="form-label">Tipo de Platillo</label>

@@ -14,7 +14,7 @@
     </div>
    <div class="nav-links">
     <a href="../../index.php">
-     Home
+     inicio
     </a>
     <a href="nosotros.php">
      Nosotros

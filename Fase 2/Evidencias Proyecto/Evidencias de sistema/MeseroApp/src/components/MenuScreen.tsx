@@ -23,7 +23,7 @@ const MenuScreen = ({ route, navigation }: { route: any, navigation: any }) => {
 
   const fetchPlatillos = () => {
     const url = getApiUrl(`menu/get_platillos.php?tipo_platillo=${tipoPlatillo}`);
-    axios.get(url)
+    axios.get<{ platillos: Platillo[] }>(url)
       .then(response => {
         setPlatillos(response.data.platillos);
       })
@@ -47,7 +47,6 @@ const MenuScreen = ({ route, navigation }: { route: any, navigation: any }) => {
         return [...prevCarrito, { ...platillo, quantity: 1 }];
       }
     });
-    Alert.alert('Éxito', 'Platillo agregado al carrito.');
   };
 
   const removeFromCart = (id_platillo: number) => {

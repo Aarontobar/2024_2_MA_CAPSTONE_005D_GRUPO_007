@@ -44,6 +44,22 @@ $conexion->close();
     <title>Restaurante</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../css/reseñas.css">
+    <style>
+        .average-rating {
+            font-size: 24px;
+            color: #FFD700; /* Color dorado */
+            display: flex;
+            align-items: center;
+        }
+        .average-rating .stars {
+            margin-left: 10px;
+        }
+        .average-rating p {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
@@ -51,7 +67,7 @@ $conexion->close();
             <img src="../../imagenes/logo.png" alt="Logo del Restaurante" />
         </div>
         <div class="nav-links">
-            <a href="../../index.php">Home</a>
+            <a href="../../index.php">Inicio</a>
             <a href="nosotros.php">Nosotros</a>
             <a href="reseñas.php">Reseñas</a>
             <a href="../menu/ver_menu.php">Pedir</a>
@@ -59,11 +75,14 @@ $conexion->close();
         <a class="sign-in" href="../login/login.php">Trabajadores</a>
     </div>
     <div class="container">
-        <h2>Promedio de Calificación: 
-            <?php 
-            // Mostrar estrellas del promedio
-            echo str_repeat('★', floor($promedioCalificacion)) . str_repeat('☆', 5 - floor($promedioCalificacion)); 
-            ?>
+        <h2 class="average-rating">
+            Promedio de Calificación: 
+            <span class="stars">
+                <?php 
+                // Mostrar estrellas del promedio
+                echo str_repeat('★', floor($promedioCalificacion)) . str_repeat('☆', 5 - floor($promedioCalificacion)); 
+                ?>
+            </span>
         </h2>
         <p>Calificación promedio: <?php echo $promedioCalificacion; ?></p>
 
@@ -97,7 +116,7 @@ $conexion->close();
             <a href="#"><i class="fab fa-facebook"></i></a>
             <a href="#"><i class="fab fa-tiktok"></i></a>
         </div>
-        <p>© 2024 Restaurante. All rights reserved.</p>
+        <p>© 2024 Restaurante. Todos los derechos reservados.</p>
     </div>
 </body>
 </html>

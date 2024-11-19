@@ -20,21 +20,23 @@ $mesa_id = isset($_GET['mesa_id']) ? intval($_GET['mesa_id']) : null;
 $id_mesero = isset($_GET['id_mesero']) ? intval($_GET['id_mesero']) : null;
 $total_amount = isset($_GET['total']) ? floatval($_GET['total']) : 0.0;
 
-// Verificar si el carrito tiene artículos
-$cart_items = isset($_SESSION['carrito']) ? $_SESSION['carrito'] : [];
+// Obtener los datos del carrito desde los parámetros GET
+$cart_items = isset($_GET['carrito']) ? $_GET['carrito'] : [];
 
 // Contar las cantidades de cada producto en el carrito
 $cart_count = [];
 
 foreach ($cart_items as $item) {
-    $product_id = $item['id'];
-    $product_price = isset($item['price']) ? $item['price'] : 0;
+    list($product_id, $product_quantity, $product_price) = explode(',', $item);
+    $product_id = intval($product_id);
+    $product_quantity = intval($product_quantity);
+    $product_price = floatval($product_price);
 
     if (isset($cart_count[$product_id])) {
-        $cart_count[$product_id]['quantity']++;
+        $cart_count[$product_id]['quantity'] += $product_quantity;
     } else {
         $cart_count[$product_id] = [
-            'quantity' => 1,
+            'quantity' => $product_quantity,
             'price' => $product_price
         ];
     }
