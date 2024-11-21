@@ -52,14 +52,19 @@ body {
     background-color: #f1f1f1;
 }
 
-#chat-messages {
-    padding: 10px;
-}
-
 #messages-list {
     max-height: 200px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: none; /* Ocultar barra de desplazamiento en Firefox */
 }
+
+#messages-list::-webkit-scrollbar {
+    display: none; /* Ocultar barra de desplazamiento en Chrome, Safari y Opera */
+}
+
 
 #message-container {
     display: flex;
@@ -100,18 +105,162 @@ body {
     margin-bottom: 5px;
 }
 
-.sent {
-    background-color: #e688b9; /* Verde claro para los mensajes enviados */
-    align-self: flex-end; /* Alinear a la derecha */
-}
-
-.received {
-    background-color: #000000; /* Gris claro para los mensajes recibidos */
-    align-self: flex-start; /* Alinear a la izquierda */
-}
 
 #messages-list {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Espaciado entre mensajes */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc; /* Color de fondo para la imagen de perfil */
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.last-message {
+    font-size: 12px;
+    color: #888;
+}
+
+#chat-messages {
+    padding: 10px;
+    background-color: #def1d7; /* Fondo color crema */
+    overflow-y: hidden; /* Ocultar barra de desplazamiento */
+}
+
+#messages-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#messages-list p {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 80%;
+    word-wrap: break-word;
+    background-color: white; /* Cuadros de diálogo blancos */
+}
+
+#messages-list p strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#messages-list p em {
+    font-size: 10px; /* Fecha y hora muy pequeña */
+    color: #888;
+}
+
+.sent {
+    align-self: flex-end; /* Alinear a la derecha */
+}
+
+.received {
+    align-self: flex-start; /* Alinear a la izquierda */
+}
+
+#chat-messages {
+    padding: 10px;
+    background-color: #e7efd0; /* Fondo color crema */
+    overflow-y: hidden; /* Ocultar barra de desplazamiento */
+}
+
+#chat-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#chat-header button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#messages-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#messages-list p {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 80%;
+    word-wrap: break-word;
+    background-color: white; /* Cuadros de diálogo blancos */
+}
+
+#messages-list p strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#messages-list p em {
+    font-size: 10px; /* Fecha y hora muy pequeña */
+    color: #888;
+}
+
+.sent {
+    align-self: flex-end; /* Alinear a la derecha */
+}
+
+.received {
+    align-self: flex-start; /* Alinear a la izquierda */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc; /* Color de fondo para la imagen de perfil */
+    border-radius: 50%;
+    margin-right: 10px;
+    background-size: cover;
+    background-position: center;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.last-message {
+    font-size: 12px;
+    color: #888;
 }

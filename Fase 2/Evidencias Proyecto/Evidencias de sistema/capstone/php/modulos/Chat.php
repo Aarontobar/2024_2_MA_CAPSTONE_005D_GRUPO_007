@@ -25,11 +25,17 @@ $id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
         <!-- La lista de usuarios se cargará aquí -->
     </ul>
     <div id="chat-messages" style="display: none;">
-        <button onclick="volverALista()">← Volver</button>
+        <div id="chat-header">
+            <button onclick="volverALista()">←</button>
+            <div class="user-profile">
+                <div class="profile-pic" id="chat-profile-pic"></div>
+                <span class="user-name" id="chat-user-name"></span>
+            </div>
+        </div>
         <div id="messages-list"></div>
         <div id="message-container">
             <input type="text" id="message-input" placeholder="Escribe un mensaje">
-            <button id="send-message"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Paper_plane_icon.svg" alt="Enviar" width="20"></button>
+            <button id="send-message"><img src="../../imagenes/enviar.png" alt="Enviar" width="20" style="filter: grayscale(100%);"></button>
         </div>
     </div>
 </div>
@@ -43,19 +49,28 @@ $id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
     });
 
     function cargarUsuarios() {
-        fetch('../modulos/cargar_usuarios.php?id_usuario=<?php echo $id_usuario; ?>')
-            .then(response => response.json())
-            .then(usuarios => {
-                const userList = document.getElementById('user-list');
-                userList.innerHTML = ''; // Limpiar la lista de usuarios
-                usuarios.forEach(usuario => {
-                    // Evitar incluir al usuario conectado
-                    if (usuario.id_usuario !== <?php echo $id_usuario; ?>) {
-                        userList.innerHTML += `<li onclick="cargarChat(${usuario.id_usuario}, '${usuario.nombre_usuario}')">${usuario.nombre_usuario}</li>`;
-                    }
-                });
+    fetch('../modulos/cargar_usuarios_2.php?id_usuario=<?php echo $id_usuario; ?>')
+        .then(response => response.json())
+        .then(usuarios => {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = ''; // Limpiar la lista de usuarios
+            usuarios.forEach(usuario => {
+                // Evitar incluir al usuario conectado
+                if (usuario.id_usuario !== <?php echo $id_usuario; ?>) {
+                    userList.innerHTML += `
+                        <li onclick="cargarChat(${usuario.id_usuario}, '${usuario.nombre_usuario}')">
+                            <div class="user-profile">
+                                <div class="profile-pic"></div>
+                                <div class="user-info">
+                                    <span class="user-name">${usuario.nombre_usuario}</span>
+                                    ${usuario.ultimo_mensaje ? `<span class="last-message">${usuario.ultimo_mensaje}</span>` : ''}
+                                </div>
+                            </div>
+                        </li>`;
+                }
             });
-    }
+        });
+}
 
     function cargarChat(id_destinatario, nombre_destinatario) {
         // Verifica que el ID del destinatario sea diferente del usuario actual
@@ -69,44 +84,44 @@ $id_usuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
         document.getElementById('messages-list').innerHTML = ''; // Limpiar los mensajes previos
         document.getElementById('user-list').style.display = 'none'; // Ocultar la lista de usuarios
 
+        // Establecer la imagen de perfil y el nombre del usuario seleccionado
+        document.getElementById('chat-user-name').textContent = nombre_destinatario;
+        document.getElementById('chat-profile-pic').style.backgroundImage = `url('ruta/a/la/imagen/de/perfil/${id_destinatario}.jpg')`;
+
         cargarMensajes(id_destinatario);
     }
 
     function cargarMensajes(id_destinatario) {
-    // Obtener el ID del usuario desde la URL
-    const id_usuario = <?php echo isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0; ?>;
+        const id_usuario = <?php echo isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0; ?>;
 
-    fetch(`../modulos/cargar_mensajes.php?id_usuario=${id_usuario}&id_destinatario=${id_destinatario}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(mensajes => {
-            console.log(mensajes); // Verifica qué datos estás recibiendo
-            const messagesList = document.getElementById('messages-list');
-            messagesList.innerHTML = ''; // Limpiar mensajes previos
-            
-            mensajes.forEach(mensaje => {
-                // Crear un nuevo elemento para el mensaje
-                const messageElement = document.createElement('p');
-                
-                // Establecer el contenido del mensaje
-                messageElement.innerHTML = `<strong>${mensaje.usuario_envia}:</strong> ${mensaje.mensaje} <em>${mensaje.fecha_hora}</em>`;
-                
-                // Asignar la clase correspondiente
-                if (mensaje.id_usuario_envia == id_usuario) {
-                    messageElement.classList.add('sent'); // Mensaje enviado
-                } else {
-                    messageElement.classList.add('received'); // Mensaje recibido
+        fetch(`../modulos/cargar_mensajes.php?id_usuario=${id_usuario}&id_destinatario=${id_destinatario}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response.json();
+            })
+            .then(mensajes => {
+                const messagesList = document.getElementById('messages-list');
+                messagesList.innerHTML = ''; // Limpiar mensajes previos
                 
-                // Añadir el mensaje a la lista
-                messagesList.appendChild(messageElement);
-            });
-        })
-        .catch(error => console.error('Error al cargar mensajes:', error));
+                mensajes.forEach(mensaje => {
+                    const messageElement = document.createElement('p');
+                    messageElement.innerHTML = `${mensaje.mensaje}<br><em>${mensaje.fecha_hora}</em>`;
+                    
+                    if (mensaje.id_usuario_envia == id_usuario) {
+                        messageElement.classList.add('sent');
+                    } else {
+                        messageElement.classList.add('received');
+                    }
+                    
+                    messagesList.appendChild(messageElement);
+                });
+
+                // Desplazar al último mensaje
+                messagesList.scrollTop = messagesList.scrollHeight;
+            })
+            .catch(error => console.error('Error al cargar mensajes:', error));
     }
 
     function volverALista() {

@@ -7,7 +7,6 @@ USE restaurante_bd;
 -- Eliminar las tablas existentes si existen
 DROP TABLE IF EXISTS historial_pedidos;
 DROP TABLE IF EXISTS usuarios;
-DROP TABLE IF EXISTS promociones;
 DROP TABLE IF EXISTS Mesa;
 DROP TABLE IF EXISTS Reserva;
 DROP TABLE IF EXISTS Ingredientes;
@@ -33,19 +32,6 @@ CREATE TABLE usuarios (
     fecha_ingreso DATE NOT NULL,
     tipo_usuario ENUM('administrador', 'cocina', 'mesero', 'metre') NOT NULL DEFAULT 'mesero',
     PRIMARY KEY (id_usuario)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
--- Crear la tabla `promociones`
-CREATE TABLE promociones (
-    id_promocion INT NOT NULL AUTO_INCREMENT,
-    nombre_promocion VARCHAR(255) NOT NULL,
-    descripcion TEXT NOT NULL,
-    descuento DECIMAL(5, 2) NOT NULL,
-    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
-    condiciones JSON NOT NULL,
-    accion JSON NOT NULL,
-    ruta_foto VARCHAR(255) DEFAULT NULL,
-    PRIMARY KEY (id_promocion)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- Crear la tabla `Mesa`
@@ -180,16 +166,7 @@ INSERT INTO usuarios (nombre_usuario, contrasena, nombre, rut, horario, disponib
 ('admin', 'contraseña_admin', 'Administrador Principal', '12345678-9', '09:00:00', TRUE, '123456789', 'admin@example.com', 'Calle Principal 123', '2024-01-01', 'administrador'),
 ('chef1', 'contraseña_chef', 'Chef Juan', '98765432-1', '08:00:00', TRUE, '987654321', 'chef1@example.com', 'Avenida Gourmet 456', '2024-01-01', 'cocina'),
 ('metre1', 'contraseña_met', 'Metre Ana', '32165498-7', '09:30:00', TRUE, '321654987', 'metre1@example.com', 'Calle del Vino 321', '2024-01-01', 'metre'),
-('mesero1', 'contraseña_mesero1', 'Mesero Pablo', '45678901-2', '10:00:00', TRUE, '456789123', 'mesero1@example.com', 'Calle del Sabor 789', '2024-01-01', 'mesero'),
-('mesero2', 'contraseña_mesero2', 'Mesero Juan', '12378945-6', '11:00:00', TRUE, '123789456', 'mesero2@example.com', 'Calle del Gusto 456', '2024-01-02', 'mesero'),
-('mesero3', 'contraseña_mesero3', 'Mesero Ana', '11223344-5', '10:30:00', TRUE, '112233445', 'mesero3@example.com', 'Calle La Paz 890', '2024-01-03', 'mesero'),
-('mesero4', 'contraseña_mesero4', 'Mesero Luis', '55667788-9', '09:45:00', TRUE, '556677889', 'mesero4@example.com', 'Avenida Central 456', '2024-01-04', 'mesero'),
-('mesero5', 'contraseña_mesero5', 'Mesero Carlos', '99887766-5', '12:00:00', TRUE, '998877665', 'mesero5@example.com', 'Calle Victoria 123', '2024-01-05', 'mesero'),
-('mesero6', 'contraseña_mesero6', 'Mesero Sofía', '33445566-7', '11:15:00', TRUE, '334455667', 'mesero6@example.com', 'Avenida Paz 789', '2024-01-06', 'mesero'),
-('mesero7', 'contraseña_mesero7', 'Mesero Pedro', '77889900-1', '12:30:00', TRUE, '778899001', 'mesero7@example.com', 'Calle Rápida 456', '2024-01-07', 'mesero'),
-('mesero8', 'contraseña_mesero8', 'Mesero Isabel', '22334455-6', '10:45:00', TRUE, '223344556', 'mesero8@example.com', 'Calle Roma 321', '2024-01-08', 'mesero'),
-('mesero9', 'contraseña_mesero9', 'Mesero Camila', '12344321-1', '09:50:00', TRUE, '123443211', 'mesero9@example.com', 'Avenida Sol 789', '2024-01-09', 'mesero'),
-('mesero10', 'contraseña_mesero10', 'Mesero Mateo', '98765432-0', '11:35:00', TRUE, '987654320', 'mesero10@example.com', 'Calle Nube 456', '2024-01-10', 'mesero');
+('mesero1', 'contraseña_mesero1', 'Mesero Pablo', '45678901-2', '10:00:00', TRUE, '456789123', 'mesero1@example.com', 'Calle del Sabor 789', '2024-01-01', 'mesero');
 
 -- Insertar mesas
 INSERT INTO Mesa (cantidad_asientos, estado) VALUES
@@ -307,19 +284,6 @@ INSERT INTO Platillo_Ingrediente (id_platillo, id_ingrediente, cantidad_utilizad
 (16, 16, 0.35),
 (17, 17, 0.40),
 (18, 18, 0.20);
-
--- Insertar promociones
-INSERT INTO promociones (nombre_promocion, descripcion, descuento, estado, condiciones, accion, ruta_foto) VALUES
-('Descuento Verano', '20% en platos principales', 20.00, 'Activo', '{"inicio": "2024-06-01", "fin": "2024-09-01"}', '{"tipo": "descuento", "valor": 20}', 'promocion_verano.jpg'),
-('Happy Hour Bebidas', '20% de descuento en bebidas de 5pm a 7pm', 20.00, 'Activo', '{"inicio": "17:00", "fin": "19:00"}', '{"tipo": "descuento", "valor": 20}', 'happy_hour.jpg'),
-('Combo Familiar', '10% para grupos de 4 o más', 10.00, 'Activo', '{"minimo_personas": 4}', '{"tipo": "descuento", "valor": 10}', 'combo_familiar.jpg'),
-('Menú Infantil Gratis', 'Un menú gratis por dos platos principales', 100.00, 'Activo', '{"minimo_platos": 2}', '{"tipo": "gratis", "platillo": "Menú Infantil"}', 'menu_infantil.jpg'),
-('Promoción de Lunes', '5% en todos los productos los lunes', 5.00, 'Activo', '{"dia": "Lunes"}', '{"tipo": "descuento", "valor": 5}', 'promocion_lunes.jpg'),
-('Cena Romántica', '15% de descuento en cenas para dos personas', 15.00, 'Activo', '{"minimo_personas": 2}', '{"tipo": "descuento", "valor": 15}', 'cena_romantica.jpg'),
-('Descuento para Estudiantes', '10% de descuento para estudiantes', 10.00, 'Activo', '{"condicion": "Estudiante"}', '{"tipo": "descuento", "valor": 10}', 'descuento_estudiantes.jpg'),
-('Happy Hour Snacks', '2x1 en snacks de 4pm a 6pm', 50.00, 'Activo', '{"inicio": "16:00", "fin": "18:00"}', '{"tipo": "descuento", "valor": 50}', 'happy_hour_snacks.jpg'),
-('Descuento Aniversario', '30% de descuento en todo el menú', 30.00, 'Activo', '{"fecha": "2024-12-01"}', '{"tipo": "descuento", "valor": 30}', 'descuento_aniversario.jpg'),
-('Promoción Fin de Semana', '20% en platillos principales sábado y domingo', 20.00, 'Activo', '{"dia": ["Sábado", "Domingo"]}', '{"tipo": "descuento", "valor": 20}', 'promocion_fin_semana.jpg');
 
 -- Insertar pedidos
 INSERT INTO Pedido (total_cuenta, hora, fecha, estado, tipo) VALUES
